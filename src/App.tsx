@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import reactLogo from './assets/react.svg';
 import viteLogo from '/vite.svg';
 import './App.css';
@@ -6,9 +6,13 @@ import { getUserData } from './firebase-config';
 
 function App() {
   const [count, setCount] = useState(0);
+  const signedIn = useRef(false);
 
   useEffect(() => {
-    getUserData();
+    if (!signedIn.current) {
+      getUserData();
+      signedIn.current = true;
+    }
   }, []);
 
   return (

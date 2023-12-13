@@ -15,31 +15,25 @@ const firebaseConfig = {
 
 console.log(firebaseConfig);
 
-const app = initializeApp(firebaseConfig);
-const dbRef = ref(getDatabase(app));
-const userId = '7Hw2yuZSDDhSGvb4jPzESzszPKd2';
+// TODO: move into a context provider so we can use it in the app
 
-const auth = getAuth();
-signInAnonymously(auth)
-  .then((user) => {
-    // Signed in..
-    console.log('signed in', user);
-  })
-  .catch((error) => {
-    const errorCode = error.code;
-    const errorMessage = error.message;
-    console.error(errorCode, errorMessage);
-    // ...
-  });
+const app = initializeApp(firebaseConfig);
+const database = getDatabase(app);
 
 export async function getUserData() {
   try {
-    const snapshot = await get(child(dbRef, `users/${userId}`));
-    if (snapshot.exists()) {
-      console.log(snapshot.val());
+    const auth = getAuth();
+    const { user } = await signInAnonymously(auth);
+    const userRef = ref(database, `users/${user.uid}`);
+    const userSnapshot = await get(userRef);
+    if (userSnapshot.exists()) {
+      console.log(userSnapshot.val());
     } else {
-      console.log('No data available');
+      console.log('No user data available');
     }
+
+    const settings = await get(child(userRef, 'settings'));
+    console.log(settings.val());
   } catch (err) {
     console.log(err);
   }
