@@ -1,6 +1,5 @@
 import { initializeApp } from 'firebase/app';
-import { child, get, getDatabase, ref } from 'firebase/database';
-import { getAuth, signInAnonymously } from 'firebase/auth';
+import { getDatabase } from 'firebase/database';
 
 const firebaseConfig = {
   apiKey: import.meta.env.VITE_FB_API_KEY,
@@ -18,23 +17,4 @@ console.log(firebaseConfig);
 // TODO: move into a context provider so we can use it in the app
 
 const app = initializeApp(firebaseConfig);
-const database = getDatabase(app);
-
-export async function getUserData() {
-  try {
-    const auth = getAuth();
-    const { user } = await signInAnonymously(auth);
-    const userRef = ref(database, `users/${user.uid}`);
-    const userSnapshot = await get(userRef);
-    if (userSnapshot.exists()) {
-      console.log(userSnapshot.val());
-    } else {
-      console.log('No user data available');
-    }
-
-    const settings = await get(child(userRef, 'settings'));
-    console.log(settings.val());
-  } catch (err) {
-    console.log(err);
-  }
-}
+export const database = getDatabase(app);
