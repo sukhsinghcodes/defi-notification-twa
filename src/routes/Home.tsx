@@ -9,6 +9,7 @@ import { useFirebase, useProjects } from '../firebase';
 import { List, ListItem } from '../components';
 import { IoChevronForward } from 'react-icons/io5';
 import { Link } from 'react-router-dom';
+import { ConnectButton } from '../web3';
 
 export function Home() {
   const fb = useFirebase();
@@ -21,6 +22,7 @@ export function Home() {
         {fb.isAuthenticated ? `Logged In!` : 'Not Logged In.'}
       </Heading>
       {fb.userId && <p>userId: {fb.userId}</p>}
+      <ConnectButton />
       {isLoading ? (
         <CircularProgress isIndeterminate thickness="3px" />
       ) : (
