@@ -36,4 +36,5 @@ export function adjustBrightness(hex: string, brightness = 0): string {
   return rgbToHex(hexValues[0], hexValues[1], hexValues[2]);
 }
 
-export const isTwa = !!Twa.initData || !!new URLSearchParams(window.location.search).get('webapp');
+export const isTwa =
+  !!Twa.initData || !!new URLSearchParams(window.location.search).get('twa');

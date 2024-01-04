@@ -1,14 +1,21 @@
 import { createContext, useContext, useEffect, useMemo, useState } from 'react';
 import { useSignIn } from '../firebase';
+import Twa from '@twa-dev/sdk';
+
+type TelegramUser = {
+  id: number;
+  username: string;
+  firstName: string;
+  lastName: string;
+  languageCode: string;
+};
 
 type UserContextProps = {
   isAuthenticated: boolean;
   userId: string | undefined;
   isServerDev: boolean | undefined;
   isSigningIn: boolean;
-  selectedAddress?: string;
-  addresses?: string[];
-  revist?: boolean;
+  telegramUser: TelegramUser | null;
 };
 
 const UserContext = createContext<UserContextProps | null>(null);
@@ -16,11 +23,26 @@ const UserContext = createContext<UserContextProps | null>(null);
 export function UserProvider({ children }: { children: React.ReactNode }) {
   const [signedIn, setSignedIn] = useState(false);
   const { data, isLoading, error } = useSignIn({ enabled: !signedIn });
+  const [telegramUser, setTelegramUser] = useState<TelegramUser | null>(null);
 
   useEffect(() => {
-    if (!signedIn && data?.userId) {
-      setSignedIn(true);
+    if (signedIn || !data?.userId) {
+      return;
     }
+
+    try {
+      const tgUserJson = new URLSearchParams(Twa.initData).get('user');
+
+      if (!tgUserJson) {
+        throw new Error('No telegram user found');
+      }
+
+      setTelegramUser(JSON.parse(tgUserJson));
+    } catch (err) {
+      console.log(err);
+    }
+
+    setSignedIn(true);
   }, [data?.userId]);
 
   useEffect(() => {
@@ -36,6 +58,7 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
       userId: data?.userId,
       isServerDev: data?.isServerDev,
       isSigningIn: isLoading,
+      telegramUser,
     }),
     [signedIn]
   );
