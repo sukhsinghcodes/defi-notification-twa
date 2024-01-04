@@ -12,9 +12,14 @@ import { StorageKeys } from '../../user';
 import { isTwa } from '../../utils';
 import Twa from '@twa-dev/sdk';
 
+type Wallet = {
+  address: string;
+  name?: string;
+};
+
 export function WalletMenu() {
   const [selectedAddress, setSelectedAddress] = useState<string | null>(null);
-  const [addresses, setAddresses] = useState<string[]>([]);
+  const [wallets, setWallets] = useState<Wallet[]>([]);
 
   useEffect(() => {
     if (isTwa) {
@@ -30,8 +35,15 @@ export function WalletMenu() {
           }
 
           console.log('addressesStr', addressesStr);
+          const walletsMap = JSON.parse(addressesStr) as Record<string, string>;
+          const wallets: Wallet[] = Object.entries(walletsMap).map(
+            ([address, name]) => ({
+              address,
+              name,
+            })
+          );
 
-          setAddresses(JSON.parse(addressesStr));
+          setWallets(wallets);
         });
       } catch (err) {
         console.log(err);
@@ -75,12 +87,11 @@ export function WalletMenu() {
         {selectedAddress ?? 'Connect Wallet'}
       </MenuButton>
       <MenuList>
-        {addresses &&
-          addresses.map((address) => (
-            <MenuItem key={address} minH="48px">
-              {address}
-            </MenuItem>
-          ))}
+        {wallets.map((wallet) => (
+          <MenuItem key={wallet.address} minH="48px">
+            {wallet.name ?? wallet.address}
+          </MenuItem>
+        ))}
       </MenuList>
     </Menu>
   );
