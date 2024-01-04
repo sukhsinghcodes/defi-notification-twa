@@ -7,8 +7,9 @@ export function Home() {
   return (
     <Container>
       <Heading as="h1" size="lg">
-        {fb.isAuthenticated ? 'Logged In!' : 'Not Logged In.'}
+        {fb.isAuthenticated ? `Logged In!` : 'Not Logged In.'}
       </Heading>
+      {fb.userId && <p>userId: {fb.userId}</p>}
     </Container>
   );
 }

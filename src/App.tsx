@@ -6,6 +6,9 @@ import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import { ErrorPage } from './ErrorPage';
 import { theme } from './theme';
 import Twa from '@twa-dev/sdk';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+
+const queryClient = new QueryClient();
 
 const router = createBrowserRouter([
   {
@@ -17,12 +20,14 @@ const router = createBrowserRouter([
 
 export function App() {
   return (
-    <ChakraProvider theme={theme}>
-      <ColorMode />
-      <FirebaseProvider>
-        <RouterProvider router={router} />
-      </FirebaseProvider>
-    </ChakraProvider>
+    <QueryClientProvider client={queryClient}>
+      <ChakraProvider theme={theme}>
+        <ColorMode />
+        <FirebaseProvider>
+          <RouterProvider router={router} />
+        </FirebaseProvider>
+      </ChakraProvider>
+    </QueryClientProvider>
   );
 }
 
