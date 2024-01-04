@@ -81,6 +81,7 @@ export function WalletMenu() {
             }
 
             console.log('address set');
+            setSelectedAddress(address);
           }
         );
       } catch (err) {
