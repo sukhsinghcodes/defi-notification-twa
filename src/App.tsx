@@ -1,5 +1,5 @@
 import { Home } from './routes/Home';
-import { FirebaseProvider } from './firebase';
+import { UserProvider } from './user';
 import { ChakraProvider, useColorMode } from '@chakra-ui/react';
 import { useEffect } from 'react';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
@@ -26,9 +26,9 @@ export function App() {
       <WagmiConfig config={config}>
         <ChakraProvider theme={theme}>
           <ColorMode />
-          <FirebaseProvider>
+          <UserProvider>
             <RouterProvider router={router} />
-          </FirebaseProvider>
+          </UserProvider>
         </ChakraProvider>
       </WagmiConfig>
     </QueryClientProvider>

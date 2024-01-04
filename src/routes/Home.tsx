@@ -6,25 +6,26 @@ import {
   Icon,
   VStack,
 } from '@chakra-ui/react';
-import { useFirebase, useProjects } from '../firebase';
+import { useProjects } from '../firebase';
 import { List, ListItem } from '../components';
 import { IoChevronForward } from 'react-icons/io5';
 import { Link } from 'react-router-dom';
 import { ConnectButton } from '../web3';
+import { useUser } from '../user';
 
 export function Home() {
-  const fb = useFirebase();
+  const user = useUser();
 
-  const { data, isLoading } = useProjects({ enabled: fb.isAuthenticated });
+  const { data, isLoading } = useProjects({ enabled: user.isAuthenticated });
 
   return (
     <Container>
       <VStack spacing={8} mb={8} alignItems="stretch">
         <div>
           <Heading as="h1" size="lg">
-            {fb.isAuthenticated ? `Logged In!` : 'Not Logged In.'}
+            {user.isAuthenticated ? `Logged In!` : 'Not Logged In.'}
           </Heading>
-          {fb.userId && <p>userId: {fb.userId}</p>}
+          {user.userId && <p>userId: {user.userId}</p>}
         </div>
         {isLoading ? (
           <CircularProgress isIndeterminate thickness="3px" />
