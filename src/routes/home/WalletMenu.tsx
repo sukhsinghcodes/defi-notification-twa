@@ -32,6 +32,8 @@ export function WalletMenu() {
           console.log('addressesStr', addressesStr);
           const walletsMap = JSON.parse(addressesStr) as Map<string, string>;
 
+          console.log('walletsMap', walletsMap);
+
           setWallets(walletsMap);
         });
       } catch (err) {
