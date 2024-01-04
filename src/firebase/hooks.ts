@@ -39,7 +39,7 @@ export function useSignIn({ enabled = true }) {
   });
 }
 
-export function useProjects() {
+export function useProjects({ enabled = true }) {
   const functions = getFunctions();
   const getProjects = httpsCallable(functions, 'getProjects');
 
@@ -56,5 +56,6 @@ export function useProjects() {
         throw err;
       }
     },
+    enabled,
   });
 }
