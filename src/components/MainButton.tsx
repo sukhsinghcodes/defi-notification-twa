@@ -1,6 +1,6 @@
 import { colors } from '../theme';
+import { isTwa } from '../utils';
 import { Button } from './Button';
-import Twa from '@twa-dev/sdk';
 import { MainButton as TwaMainButton } from '@twa-dev/sdk/react';
 
 interface MainButtonProps {
@@ -14,7 +14,7 @@ interface MainButtonProps {
 
 export function MainButton(props: MainButtonProps) {
   // if not webapp
-  if (!Twa.initData) {
+  if (!isTwa) {
     return (
       <Button
         style={{
@@ -32,7 +32,11 @@ export function MainButton(props: MainButtonProps) {
   return (
     <TwaMainButton
       {...props}
-      color={props.disabled || props.progress ? colors.button_disabed_color : colors.button_color}
+      color={
+        props.disabled || props.progress
+          ? colors.button_disabed_color
+          : colors.button_color
+      }
       text={props.text?.toUpperCase()}
     />
   );

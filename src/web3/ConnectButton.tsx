@@ -1,7 +1,7 @@
 import { useAccount, useConnect, useDisconnect } from 'wagmi';
 import { InjectedConnector } from 'wagmi/connectors/injected';
 import { MainButton } from '../components';
-import { Text } from '@chakra-ui/react';
+import { Box, Text } from '@chakra-ui/react';
 
 export function ConnectButton() {
   const { address, isConnected } = useAccount();
@@ -12,10 +12,10 @@ export function ConnectButton() {
 
   if (isConnected) {
     return (
-      <>
+      <Box>
         <Text>{address}</Text>
         <MainButton onClick={disconnect} text="Disconnect" />
-      </>
+      </Box>
     );
   }
 
