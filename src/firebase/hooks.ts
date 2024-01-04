@@ -3,6 +3,7 @@ import { ref, get, child, set } from 'firebase/database';
 import { database } from './firebase-config';
 import { useQuery } from '@tanstack/react-query';
 import { httpsCallable, getFunctions } from 'firebase/functions';
+import { Project } from './types';
 
 export function useSignIn({ enabled = true }) {
   return useQuery({
@@ -49,8 +50,33 @@ export function useProjects({ enabled = true }) {
       try {
         // use firebase functions to get projects using httpsCallable
         const { data } = await getProjects();
-        console.log(data);
-        return data as Project[];
+
+        const projectsData = data as Project[];
+
+        console.log(projectsData);
+
+        const projects = projectsData.map((project) => {
+          return {
+            ...project,
+            background: !Array.isArray(project.background)
+              ? [project.background]
+              : project.background,
+            notificationDefinitions: Boolean(project.notificationDefinitions)
+              ? Object.values(project.notificationDefinitions).map((def) => {
+                  return {
+                    ...def,
+                    subscribeForm: def.subscribeForm
+                      ? def.subscribeForm.controls.sort(
+                          (a, b) => a.index - b.index
+                        )
+                      : null,
+                  };
+                })
+              : [],
+          };
+        });
+        console.log(projects);
+        return projects;
       } catch (err) {
         console.log(err);
         throw err;

@@ -1,10 +1,48 @@
-type NotificationDefinition = {
+export type SelectOption = {
+  label: string;
+  value: string;
+};
+
+export type Control = {
+  readonly uid: string;
+  readonly type: string;
+  readonly label: string;
+  readonly suffix?: string | null;
+  readonly description?: string | null;
+  readonly defaultValue?: string | null;
+  readonly value?: string | null;
+  readonly index: number;
+  readonly internal: boolean;
+  readonly isOptional: boolean;
+  readonly selectOptions: SelectOption[];
+};
+
+export type SubscribeForm = {
+  controls: Control[];
+};
+
+export type Subscription = {
+  uid?: string | null;
+  userId: string;
+  projectId: string;
+  readonly notificationId: string;
+  address: string;
+  displayName?: string | null;
+  readonly subscriptionValues: { [key: string]: string | null };
+};
+
+export type NotificationDefinition = {
   notificationId: string;
   displayName: string;
   description: string;
+
+  network?: string;
+  displayIcon?: string;
+  subscribeForm?: SubscribeForm;
+  subscriptions?: Subscription[];
 };
 
-type Project = {
+export type Project = {
   name: string;
   category: string;
   website: string;
