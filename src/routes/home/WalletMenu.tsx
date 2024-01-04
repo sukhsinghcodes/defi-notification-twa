@@ -76,7 +76,7 @@ export function WalletMenu() {
         {selectedAddress ? wallets.get(selectedAddress) : 'Connect Wallet'}
       </MenuButton>
       <MenuList>
-        {Object.entries(wallets).map(([address, name]) => (
+        {Array.from(wallets.entries()).map(([address, name]) => (
           <MenuItem key={address} minH="48px">
             {name != '' ? name : address}
           </MenuItem>
