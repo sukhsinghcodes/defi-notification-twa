@@ -6,8 +6,8 @@ import {
   MenuItem,
   Icon,
 } from '@chakra-ui/react';
-import { useEffect, useState } from 'react';
-import { BiChevronDown } from 'react-icons/bi';
+import { useCallback, useEffect, useState } from 'react';
+import { BiChevronDown, BiPlus } from 'react-icons/bi';
 import { StorageKeys } from '../../user';
 import { isTwa } from '../../utils';
 import Twa from '@twa-dev/sdk';
@@ -68,11 +68,34 @@ export function WalletMenu() {
     }
   }, []);
 
+  const handleSelect = useCallback((address: string) => {
+    if (isTwa) {
+      try {
+        Twa.CloudStorage.setItem(
+          StorageKeys.SELECTED_ADDRESS,
+          address,
+          (err) => {
+            if (err) {
+              console.log(err);
+              return;
+            }
+
+            console.log('address set');
+          }
+        );
+      } catch (err) {
+        console.log(err);
+      }
+    }
+  }, []);
+
   return (
     <Menu>
       <MenuButton
         as={Button}
-        rightIcon={<Icon as={BiChevronDown} />}
+        rightIcon={
+          <Icon as={selectedAddress && wallets ? BiChevronDown : BiPlus} />
+        }
         variant="primary"
       >
         {selectedAddress && wallets
@@ -82,7 +105,11 @@ export function WalletMenu() {
       <MenuList>
         {wallets &&
           Object.entries(wallets).map(([address, name]) => (
-            <MenuItem key={address} minH="48px">
+            <MenuItem
+              key={address}
+              minH="48px"
+              onClick={() => handleSelect(address)}
+            >
               {name != '' ? name : address}
             </MenuItem>
           ))}

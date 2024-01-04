@@ -15,6 +15,7 @@ import { useEffect } from 'react';
 import Twa from '@twa-dev/sdk';
 import { isTwa } from '../../utils';
 import { WalletMenu } from './WalletMenu';
+import { setTwaBg } from '../../theme';
 
 export function Home() {
   const user = useUser();
@@ -25,6 +26,8 @@ export function Home() {
     if (user.isAuthenticated) {
       // do something
       if (isTwa) {
+        setTwaBg('secondary_bg_color');
+
         try {
           Twa.CloudStorage.getItem(StorageKeys.REVISIT, (err, revisit) => {
             if (err) {
