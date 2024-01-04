@@ -29,6 +29,8 @@ export function WalletMenu() {
             return;
           }
 
+          console.log('addressesStr', addressesStr);
+
           setAddresses(JSON.parse(addressesStr));
         });
       } catch (err) {
@@ -52,6 +54,8 @@ export function WalletMenu() {
               return;
             }
 
+            console.log('address', address);
+
             setSelectedAddress(address);
           }
         );
@@ -63,15 +67,20 @@ export function WalletMenu() {
 
   return (
     <Menu>
-      <MenuButton as={Button} rightIcon={<Icon as={BiChevronDown} />}>
-        {selectedAddress}
+      <MenuButton
+        as={Button}
+        rightIcon={<Icon as={BiChevronDown} />}
+        variant="primary"
+      >
+        {selectedAddress ?? 'Connect Wallet'}
       </MenuButton>
       <MenuList>
-        {addresses.map((address) => (
-          <MenuItem key={address} minH="48px">
-            {address}
-          </MenuItem>
-        ))}
+        {addresses &&
+          addresses.map((address) => (
+            <MenuItem key={address} minH="48px">
+              {address}
+            </MenuItem>
+          ))}
       </MenuList>
     </Menu>
   );
