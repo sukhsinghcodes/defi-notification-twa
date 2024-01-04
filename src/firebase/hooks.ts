@@ -70,6 +70,9 @@ export function useProjects({ enabled = true }) {
                           (a, b) => a.index - b.index
                         )
                       : null,
+                    subscriptions: def.subscriptions
+                      ? Object.values(def.subscriptions)
+                      : [],
                   };
                 })
               : [],
