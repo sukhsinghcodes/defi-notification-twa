@@ -1,5 +1,5 @@
 import { Home } from './routes/Home';
-import { FirebaseProvider } from './providers';
+import { FirebaseProvider } from './firebase';
 import { ChakraProvider, useColorMode } from '@chakra-ui/react';
 import { useEffect } from 'react';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';

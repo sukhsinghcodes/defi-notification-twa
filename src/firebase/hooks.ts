@@ -1,7 +1,8 @@
 import { getAuth, signInAnonymously } from 'firebase/auth';
 import { ref, get, child, set } from 'firebase/database';
-import { database } from '../../firebase-config';
+import { database } from './firebase-config';
 import { useQuery } from '@tanstack/react-query';
+import { httpsCallable, getFunctions } from 'firebase/functions';
 
 export function useSignIn({ enabled = true }) {
   return useQuery({
@@ -35,5 +36,25 @@ export function useSignIn({ enabled = true }) {
       }
     },
     enabled,
+  });
+}
+
+export function useProjects() {
+  const functions = getFunctions();
+  const getProjects = httpsCallable(functions, 'getProjects');
+
+  return useQuery({
+    queryKey: ['projects'],
+    queryFn: async () => {
+      try {
+        // use firebase functions to get projects using httpsCallable
+        const { data } = await getProjects();
+        console.log(data);
+        return data as Project[];
+      } catch (err) {
+        console.log(err);
+        throw err;
+      }
+    },
   });
 }
