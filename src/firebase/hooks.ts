@@ -53,8 +53,6 @@ export function useProjects({ enabled = true }) {
 
         const projectsData = data as Project[];
 
-        console.log(projectsData);
-
         const projects = projectsData.map((project) => {
           return {
             ...project,
@@ -78,7 +76,6 @@ export function useProjects({ enabled = true }) {
               : [],
           };
         });
-        console.log(projects);
         return projects;
       } catch (err) {
         console.log(err);

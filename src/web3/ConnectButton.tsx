@@ -1,6 +1,6 @@
 import { useAccount, useConnect, useDisconnect } from 'wagmi';
 import { InjectedConnector } from 'wagmi/connectors/injected';
-import { MainButton } from '../components';
+import { MainButton } from '../twa-ui-kit';
 import { Box, Text } from '@chakra-ui/react';
 
 export function ConnectButton() {

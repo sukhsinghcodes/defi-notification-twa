@@ -1,19 +1,20 @@
 import {
   Avatar,
-  CircularProgress,
   Container,
   Heading,
   Icon,
+  Spinner,
   VStack,
 } from '@chakra-ui/react';
 import { useProjects } from '../../firebase';
-import { List, ListItem } from '../../components';
+import { List, ListItem } from '../../twa-ui-kit';
 import { IoChevronForward } from 'react-icons/io5';
 import { Link } from 'react-router-dom';
 import { StorageKeys, useUser } from '../../user';
 import { useEffect } from 'react';
 import Twa from '@twa-dev/sdk';
 import { isTwa } from '../../utils';
+import { WalletMenu } from './WalletMenu';
 
 export function Home() {
   const user = useUser();
@@ -57,8 +58,9 @@ export function Home() {
           </Heading>
           {user.userId && <p>userId: {user.userId}</p>}
         </div>
+        <WalletMenu />
         {isLoading ? (
-          <CircularProgress isIndeterminate thickness="3px" />
+          <Spinner />
         ) : (
           <List mode="display">
             {data?.map((project) => (
