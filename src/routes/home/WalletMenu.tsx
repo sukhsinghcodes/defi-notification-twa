@@ -14,7 +14,7 @@ import Twa from '@twa-dev/sdk';
 
 export function WalletMenu() {
   const [selectedAddress, setSelectedAddress] = useState<string | null>(null);
-  const [wallets, setWallets] = useState<Map<string, string>>(new Map());
+  const [wallets, setWallets] = useState<Record<string, string>>();
 
   useEffect(() => {
     if (isTwa) {
@@ -30,7 +30,7 @@ export function WalletMenu() {
           }
 
           console.log('addressesStr', addressesStr);
-          const walletsMap = JSON.parse(addressesStr) as Map<string, string>;
+          const walletsMap = JSON.parse(addressesStr) as Record<string, string>;
 
           console.log('walletsMap', walletsMap);
 
@@ -75,14 +75,17 @@ export function WalletMenu() {
         rightIcon={<Icon as={BiChevronDown} />}
         variant="primary"
       >
-        {selectedAddress ? wallets.get(selectedAddress) : 'Connect Wallet'}
+        {selectedAddress && wallets
+          ? wallets[selectedAddress]
+          : 'Connect Wallet'}
       </MenuButton>
       <MenuList>
-        {Array.from(wallets.entries()).map(([address, name]) => (
-          <MenuItem key={address} minH="48px">
-            {name != '' ? name : address}
-          </MenuItem>
-        ))}
+        {wallets &&
+          Object.entries(wallets).map(([address, name]) => (
+            <MenuItem key={address} minH="48px">
+              {name != '' ? name : address}
+            </MenuItem>
+          ))}
       </MenuList>
     </Menu>
   );
