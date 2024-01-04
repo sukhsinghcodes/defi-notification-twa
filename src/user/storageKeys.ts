@@ -1,0 +1,6 @@
+export enum StorageKeys {
+  REVISIT = 'REVISIT',
+  SELECTED_ADDRESS = 'SELECTED_ADDRESS',
+  ADDRESSES = 'ADDRESSES',
+  DEV_MODE = 'DEV_MODE',
+}

@@ -1,4 +1,4 @@
-import { Home } from './routes/Home';
+import { Home } from './routes';
 import { UserProvider } from './user';
 import { ChakraProvider, useColorMode } from '@chakra-ui/react';
 import { useEffect } from 'react';

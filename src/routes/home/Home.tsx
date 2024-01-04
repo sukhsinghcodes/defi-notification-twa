@@ -6,17 +6,47 @@ import {
   Icon,
   VStack,
 } from '@chakra-ui/react';
-import { useProjects } from '../firebase';
-import { List, ListItem } from '../components';
+import { useProjects } from '../../firebase';
+import { List, ListItem } from '../../components';
 import { IoChevronForward } from 'react-icons/io5';
 import { Link } from 'react-router-dom';
-import { ConnectButton } from '../web3';
-import { useUser } from '../user';
+import { StorageKeys, useUser } from '../../user';
+import { useEffect } from 'react';
+import Twa from '@twa-dev/sdk';
+import { isTwa } from '../../utils';
 
 export function Home() {
   const user = useUser();
 
   const { data, isLoading } = useProjects({ enabled: user.isAuthenticated });
+
+  useEffect(() => {
+    if (user.isAuthenticated) {
+      // do something
+      if (isTwa) {
+        try {
+          Twa.CloudStorage.getItem(StorageKeys.REVISIT, (err, revisit) => {
+            if (err) {
+              console.log(err);
+              return;
+            }
+
+            if (!revisit) {
+              Twa.CloudStorage.setItem(StorageKeys.REVISIT, '1', (err) => {
+                if (err) {
+                  console.log(err);
+                  return;
+                }
+                console.log('revisit set');
+              });
+            }
+          });
+        } catch (err) {
+          console.log(err);
+        }
+      }
+    }
+  }, []);
 
   return (
     <Container>
@@ -52,7 +82,6 @@ export function Home() {
             ))}
           </List>
         )}
-        <ConnectButton />
       </VStack>
     </Container>
   );

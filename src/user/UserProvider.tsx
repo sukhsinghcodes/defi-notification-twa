@@ -1,12 +1,14 @@
 import { createContext, useContext, useEffect, useMemo, useState } from 'react';
 import { useSignIn } from '../firebase';
-import Twa from '@twa-dev/sdk';
 
 type UserContextProps = {
   isAuthenticated: boolean;
   userId: string | undefined;
   isServerDev: boolean | undefined;
   isSigningIn: boolean;
+  selectedAddress?: string;
+  addresses?: string[];
+  revist?: boolean;
 };
 
 const UserContext = createContext<UserContextProps | null>(null);
@@ -14,12 +16,6 @@ const UserContext = createContext<UserContextProps | null>(null);
 export function UserProvider({ children }: { children: React.ReactNode }) {
   const [signedIn, setSignedIn] = useState(false);
   const { data, isLoading, error } = useSignIn({ enabled: !signedIn });
-
-  try {
-    Twa.CloudStorage.getKeys((_, keys) => console.log(keys));
-  } catch (err) {
-    //
-  }
 
   useEffect(() => {
     if (!signedIn && data?.userId) {
