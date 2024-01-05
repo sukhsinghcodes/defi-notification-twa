@@ -3,7 +3,7 @@ import { DataDisplayItem } from './DataDisplayItem';
 import { Icon, useColorMode } from '@chakra-ui/react';
 import { BiCheck } from 'react-icons/bi';
 
-import { colors, tgColors } from '../theme';
+import { colors, tgColors } from './theme';
 import { Card } from './Card';
 
 const styles = css`

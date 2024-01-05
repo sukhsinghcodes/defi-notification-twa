@@ -1,4 +1,4 @@
-import { colors } from '../theme';
+import { colors } from './theme';
 import { isTwa } from '../utils';
 import { Button } from './Button';
 import { MainButton as TwaMainButton } from '@twa-dev/sdk/react';

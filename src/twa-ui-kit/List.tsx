@@ -1,7 +1,7 @@
 import { Skeleton, Text, VStack } from '@chakra-ui/react';
 import { SerializedStyles, css } from '@emotion/react';
 import React from 'react';
-import { colors } from '../theme';
+import { colors } from './theme';
 import { Card } from './Card';
 import { ListItem } from './ListItem';
 
@@ -62,14 +62,25 @@ const styles = {
   `,
 };
 
-export function List({ mode, children, isLoading, css, title, className }: Props) {
+export function List({
+  mode,
+  children,
+  isLoading,
+  css,
+  title,
+  className,
+}: Props) {
   return mode === 'select' ? (
     <Card css={[css, styles.select]} className={className}>
       <Title title={title} />
       {isLoading ? <Loader /> : children}
     </Card>
   ) : (
-    <VStack css={[styles.display, css]} className={className} alignItems="stretch">
+    <VStack
+      css={[styles.display, css]}
+      className={className}
+      alignItems="stretch"
+    >
       <Title title={title} />
       {isLoading ? <Loader /> : children}
     </VStack>

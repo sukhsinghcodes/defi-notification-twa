@@ -1,7 +1,7 @@
 import { CardBody, Card as ChakraCard } from '@chakra-ui/react';
 import { SerializedStyles, css } from '@emotion/react';
 
-import { colors } from '../theme';
+import { colors } from './theme';
 
 const styles = css`
   border-radius: 0.875rem;
@@ -20,7 +20,12 @@ type CardProps = {
 
 export function Card({ children, onClick, className = '', css }: CardProps) {
   return (
-    <ChakraCard onClick={onClick} size="sm" css={[styles, css]} className={className}>
+    <ChakraCard
+      onClick={onClick}
+      size="sm"
+      css={[styles, css]}
+      className={className}
+    >
       <CardBody>{children}</CardBody>
     </ChakraCard>
   );

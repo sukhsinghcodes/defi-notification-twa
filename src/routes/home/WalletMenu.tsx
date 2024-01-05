@@ -8,6 +8,11 @@ import {
   Box,
   Heading,
   MenuDivider,
+  Drawer,
+  DrawerBody,
+  DrawerContent,
+  DrawerHeader,
+  DrawerOverlay,
 } from '@chakra-ui/react';
 import { useCallback, useEffect, useState } from 'react';
 import { BiChevronDown, BiPlusCircle } from 'react-icons/bi';
@@ -15,10 +20,17 @@ import { StorageKeys } from '../../user';
 import { isTwa } from '../../utils';
 import Twa from '@twa-dev/sdk';
 import { DataDisplayItem, MainButton } from '../../twa-ui-kit';
+import { AddWalletDrawer } from './AddWalletDrawer';
+
+type Wallet = {
+  address: string;
+  name?: string;
+};
 
 export function WalletMenu() {
   const [selectedAddress, setSelectedAddress] = useState<string | null>(null);
-  const [wallets, setWallets] = useState<Record<string, string>>();
+  const [wallets, setWallets] = useState<Record<string, string>>({});
+  const [isAddWalletOpen, setIsAddWalletOpen] = useState(false);
 
   useEffect(() => {
     if (isTwa) {
@@ -99,9 +111,37 @@ export function WalletMenu() {
     }
   }, []);
 
-  if (selectedAddress && wallets) {
-    return (
-      <Box>
+  const addWallet = useCallback(
+    (wallet: Wallet) => {
+      if (isTwa) {
+        setWallets((w) => {
+          w[wallet.address] = wallet.name || '';
+
+          try {
+            const walletsStr = JSON.stringify(w);
+            Twa.CloudStorage.setItem(
+              StorageKeys.ADDRESSES,
+              walletsStr,
+              (err) => {
+                if (err) {
+                  throw err;
+                }
+              }
+            );
+          } catch (err) {
+            console.log(err);
+          }
+
+          return w;
+        });
+      }
+    },
+    [wallets]
+  );
+
+  return (
+    <Box>
+      {selectedAddress && wallets ? (
         <Menu>
           <MenuButton as={Button} variant="card">
             <DataDisplayItem
@@ -126,9 +166,17 @@ export function WalletMenu() {
             </MenuItem>
           </MenuList>
         </Menu>
-      </Box>
-    );
-  }
+      ) : (
+        <MainButton
+          onClick={() => setIsAddWalletOpen(true)}
+          text="Add Wallet"
+        />
+      )}
 
-  return <MainButton onClick={() => {}} text="Add Wallet" />;
+      <AddWalletDrawer
+        isOpen={isAddWalletOpen}
+        onClose={() => setIsAddWalletOpen(false)}
+      />
+    </Box>
+  );
 }

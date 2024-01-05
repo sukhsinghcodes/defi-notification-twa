@@ -15,7 +15,7 @@ import { useEffect } from 'react';
 import Twa from '@twa-dev/sdk';
 import { isTwa } from '../../utils';
 import { WalletMenu } from './WalletMenu';
-import { setTwaBg } from '../../theme';
+import { setTwaBg } from '../../twa-ui-kit/theme';
 
 export function Home() {
   const user = useUser();

@@ -4,14 +4,17 @@ import {
   defineStyleConfig,
   extendTheme,
 } from '@chakra-ui/react';
-import { inputAnatomy } from '@chakra-ui/anatomy';
+import { inputAnatomy, drawerAnatomy } from '@chakra-ui/anatomy';
 import { createMultiStyleConfigHelpers } from '@chakra-ui/react';
-import { adjustBrightness, hexToRgba } from './utils';
+import { adjustBrightness, hexToRgba } from '../utils';
 import Twa from '@twa-dev/sdk';
 import { StyleFunctionProps, mode } from '@chakra-ui/theme-tools';
 
-const { definePartsStyle, defineMultiStyleConfig } =
+const { definePartsStyle: inputParts, defineMultiStyleConfig: inputConfig } =
   createMultiStyleConfigHelpers(inputAnatomy.keys);
+
+const { definePartsStyle: drawerParts, defineMultiStyleConfig: drawerConfig } =
+  createMultiStyleConfigHelpers(drawerAnatomy.keys);
 
 // Telegram theme colours as of 09/10/2023
 export const tgColors = {
@@ -198,12 +201,12 @@ export const theme = extendTheme({
         }),
       },
     }),
-    Input: defineMultiStyleConfig({
+    Input: inputConfig({
       defaultProps: {
         variant: 'filled',
       },
       variants: {
-        filled: definePartsStyle((props: StyleFunctionProps) => ({
+        filled: inputParts((props: StyleFunctionProps) => ({
           field: {
             backgroundColor: mode(
               colors.secondary_bg_color,
@@ -248,7 +251,7 @@ export const theme = extendTheme({
             },
           },
         })),
-        inverted: definePartsStyle((props: StyleFunctionProps) => ({
+        inverted: inputParts((props: StyleFunctionProps) => ({
           field: {
             backgroundColor: mode(colors.bg_color, colors.bg_color)(props),
             borderRadius: '0.875rem',
@@ -294,6 +297,14 @@ export const theme = extendTheme({
       baseStyle: {
         fontSize: '2xl',
       },
+    }),
+    Drawer: drawerConfig({
+      baseStyle: drawerParts({
+        dialog: defineStyle({
+          backgroundColor: (props) =>
+            mode(colors.bg_color, colors.bg_color)(props),
+        }),
+      }),
     }),
   },
 });

@@ -4,7 +4,7 @@ import { ChakraProvider, useColorMode } from '@chakra-ui/react';
 import { useEffect } from 'react';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import { ErrorPage } from './ErrorPage';
-import { theme } from './theme';
+import { theme } from './twa-ui-kit/theme';
 import Twa from '@twa-dev/sdk';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { WagmiConfig } from 'wagmi';
