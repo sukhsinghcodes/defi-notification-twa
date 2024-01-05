@@ -5,12 +5,16 @@ import {
   MenuList,
   MenuItem,
   Icon,
+  Box,
+  Heading,
+  MenuDivider,
 } from '@chakra-ui/react';
 import { useCallback, useEffect, useState } from 'react';
-import { BiChevronDown, BiPlus } from 'react-icons/bi';
+import { BiChevronDown, BiPlusCircle } from 'react-icons/bi';
 import { StorageKeys } from '../../user';
 import { isTwa } from '../../utils';
 import Twa from '@twa-dev/sdk';
+import { DataDisplayItem, MainButton } from '../../twa-ui-kit';
 
 export function WalletMenu() {
   const [selectedAddress, setSelectedAddress] = useState<string | null>(null);
@@ -53,6 +57,11 @@ export function WalletMenu() {
               return;
             }
 
+            if (!address && wallets) {
+              setSelectedAddress(Object.keys(wallets)[0]);
+              return;
+            }
+
             if (!address) {
               return;
             }
@@ -90,31 +99,36 @@ export function WalletMenu() {
     }
   }, []);
 
-  return (
-    <Menu>
-      <MenuButton
-        as={Button}
-        rightIcon={
-          <Icon as={selectedAddress && wallets ? BiChevronDown : BiPlus} />
-        }
-        variant="primary"
-      >
-        {selectedAddress && wallets
-          ? wallets[selectedAddress]
-          : 'Connect Wallet'}
-      </MenuButton>
-      <MenuList>
-        {wallets &&
-          Object.entries(wallets).map(([address, name]) => (
-            <MenuItem
-              key={address}
-              minH="48px"
-              onClick={() => handleSelect(address)}
-            >
-              {name != '' ? name : address}
+  if (selectedAddress && wallets) {
+    return (
+      <Box>
+        <Menu>
+          <MenuButton as={Button} variant="card">
+            <DataDisplayItem
+              StartTextSlot={
+                <Heading as="h3" variant="bodyTitle">
+                  {wallets[selectedAddress]}
+                </Heading>
+              }
+              EndIconSlot={<Icon as={BiChevronDown} />}
+            />
+          </MenuButton>
+          <MenuList>
+            {wallets &&
+              Object.entries(wallets).map(([address, name]) => (
+                <MenuItem key={address} onClick={() => handleSelect(address)}>
+                  {name != '' ? name : address}
+                </MenuItem>
+              ))}
+            <MenuDivider />
+            <MenuItem onClick={() => {}} icon={<Icon as={BiPlusCircle} />}>
+              Add Wallet
             </MenuItem>
-          ))}
-      </MenuList>
-    </Menu>
-  );
+          </MenuList>
+        </Menu>
+      </Box>
+    );
+  }
+
+  return <MainButton onClick={() => {}} text="Add Wallet" />;
 }
