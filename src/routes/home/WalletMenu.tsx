@@ -13,7 +13,6 @@ import {
 import { useCallback, useEffect, useState } from 'react';
 import { BiChevronDown, BiPlusCircle } from 'react-icons/bi';
 import { StorageKeys } from '../../user';
-import { isTwa } from '../../utils';
 import Twa from '@twa-dev/sdk';
 import { DataDisplayItem, MainButton } from '../../twa-ui-kit';
 import { AddWalletDrawer } from './AddWalletDrawer';
@@ -26,85 +25,72 @@ export function WalletMenu() {
   const toast = useToast();
 
   useEffect(() => {
-    if (isTwa) {
-      try {
-        Twa.CloudStorage.getItem(StorageKeys.ADDRESSES, (err, addressesStr) => {
-          if (err) {
-            console.log(err);
-            return;
-          }
+    try {
+      Twa.CloudStorage.getItem(StorageKeys.ADDRESSES, (err, addressesStr) => {
+        if (err) {
+          console.log(err);
+          return;
+        }
 
-          if (!addressesStr) {
-            return;
-          }
+        if (!addressesStr) {
+          return;
+        }
 
-          console.log('addressesStr', addressesStr);
-          const walletsMap = JSON.parse(addressesStr) as Record<string, string>;
+        console.log('addressesStr', addressesStr);
+        const walletsMap = JSON.parse(addressesStr) as Record<string, string>;
 
-          console.log('walletsMap', walletsMap);
+        console.log('walletsMap', walletsMap);
 
-          setWallets(walletsMap);
-        });
-      } catch (err) {
-        console.log(err);
-      }
+        setWallets(walletsMap);
+      });
+    } catch (err) {
+      console.log(err);
     }
   }, []);
 
   useEffect(() => {
-    if (isTwa) {
-      try {
-        Twa.CloudStorage.getItem(
-          StorageKeys.SELECTED_ADDRESS,
-          (err, address) => {
-            if (err) {
-              console.log(err);
-              return;
-            }
+    try {
+      Twa.CloudStorage.getItem(StorageKeys.SELECTED_ADDRESS, (err, address) => {
+        if (err) {
+          console.log(err);
+          return;
+        }
 
-            if (!address && wallets) {
-              setSelectedAddress(Object.keys(wallets)[0]);
-              return;
-            }
+        if (!address && wallets) {
+          setSelectedAddress(Object.keys(wallets)[0]);
+          return;
+        }
 
-            if (!address) {
-              return;
-            }
+        if (!address) {
+          return;
+        }
 
-            console.log('address', address);
+        console.log('address', address);
 
-            setSelectedAddress(address);
-          }
-        );
-      } catch (err) {
-        console.log(err);
-      }
+        setSelectedAddress(address);
+      });
+    } catch (err) {
+      console.log(err);
     }
   }, []);
 
   const handleSelect = useCallback((address: string) => {
-    if (isTwa) {
-      try {
-        Twa.CloudStorage.setItem(
-          StorageKeys.SELECTED_ADDRESS,
-          address,
-          (err) => {
-            if (err) {
-              console.log(err);
-              return;
-            }
+    try {
+      Twa.CloudStorage.setItem(StorageKeys.SELECTED_ADDRESS, address, (err) => {
+        if (err) {
+          console.log(err);
+          return;
+        }
 
-            console.log('address set');
-            setSelectedAddress(address);
-          }
-        );
-      } catch (err) {
-        console.log(err);
-      }
+        console.log('address set');
+        setSelectedAddress(address);
+      });
+    } catch (err) {
+      console.log(err);
     }
   }, []);
 
-  const addWallet = useCallback(
+  const addWalletSubmit = useCallback(
     (wallet: Wallet) => {
       setWallets((_wallets) => {
         _wallets[wallet.address] = wallet.name || '';
@@ -122,11 +108,18 @@ export function WalletMenu() {
               title: `${wallet.name} added.`,
               description: wallet.address,
               status: 'success',
-              duration: 3000,
+              duration: 2000,
             });
           });
         } catch (err) {
-          console.log(err);
+          if (!toast.isActive('add-wallet-error')) {
+            toast({
+              title: 'Error when adding new wallet',
+              status: 'error',
+              duration: 2000,
+              id: 'add-wallet-error',
+            });
+          }
         }
 
         return _wallets;
@@ -175,7 +168,7 @@ export function WalletMenu() {
       <AddWalletDrawer
         isOpen={isAddWalletOpen}
         onClose={() => setIsAddWalletOpen(false)}
-        onSubmit={addWallet}
+        onSubmit={addWalletSubmit}
       />
     </Box>
   );
