@@ -6,10 +6,12 @@ import {
   DrawerBody,
   Input,
   VStack,
+  FormControl,
+  FormErrorMessage,
 } from '@chakra-ui/react';
 import { MainButton } from '../../twa-ui-kit';
-import { useState } from 'react';
 import { Wallet } from './types';
+import { useForm } from 'react-hook-form';
 
 type AddWalletDrawerProps = {
   isOpen: boolean;
@@ -22,31 +24,50 @@ export function AddWalletDrawer({
   onClose,
   onSubmit,
 }: AddWalletDrawerProps) {
-  const [address, setAddress] = useState<string>('');
-  const [name, setName] = useState<string>('');
+  const form = useForm({
+    defaultValues: {
+      address: '',
+      name: '',
+    },
+  });
 
   return (
-    <Drawer placement="bottom" onClose={onClose} isOpen={isOpen}>
+    <Drawer
+      placement="bottom"
+      onClose={() => {
+        onClose();
+        form.reset();
+      }}
+      isOpen={isOpen}
+    >
       <DrawerOverlay />
       <DrawerContent>
         <DrawerHeader>Add Wallet</DrawerHeader>
         <DrawerBody>
-          <VStack spacing={4} mb={4} alignItems="stretch">
-            <Input
-              placeholder="Address"
-              value={address}
-              onChange={(e) => setAddress(e.target.value)}
-            />
-            <Input
-              placeholder="Name"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-            />
-            <MainButton
-              text="Add"
-              onClick={() => onSubmit({ address, name })}
-            />
-          </VStack>
+          <form>
+            <VStack spacing={4} mb={4} alignItems="stretch">
+              <FormControl isInvalid={Boolean(form.formState.errors.address)}>
+                <Input
+                  type="text"
+                  placeholder="Address"
+                  {...form.register('address', { required: true })}
+                />
+                {Boolean(form.formState.errors.address) && (
+                  <FormErrorMessage>
+                    Wallet address is required.
+                  </FormErrorMessage>
+                )}
+              </FormControl>
+              <FormControl>
+                <Input
+                  type="text"
+                  placeholder="Name"
+                  {...form.register('name')}
+                />
+              </FormControl>
+              <MainButton text="Add" onClick={form.handleSubmit(onSubmit)} />
+            </VStack>
+          </form>
         </DrawerBody>
       </DrawerContent>
     </Drawer>

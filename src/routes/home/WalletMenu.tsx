@@ -106,37 +106,31 @@ export function WalletMenu() {
 
   const addWallet = useCallback(
     (wallet: Wallet) => {
-      if (isTwa) {
-        setWallets((_wallets) => {
-          _wallets[wallet.address] = wallet.name || '';
+      setWallets((_wallets) => {
+        _wallets[wallet.address] = wallet.name || '';
 
-          try {
-            const walletsStr = JSON.stringify(_wallets);
-            Twa.CloudStorage.setItem(
-              StorageKeys.ADDRESSES,
-              walletsStr,
-              (err) => {
-                if (err) {
-                  throw err;
-                }
+        try {
+          const walletsStr = JSON.stringify(_wallets);
+          Twa.CloudStorage.setItem(StorageKeys.ADDRESSES, walletsStr, (err) => {
+            if (err) {
+              throw err;
+            }
 
-                setSelectedAddress(wallet.address);
-                setIsAddWalletOpen(false);
-                toast({
-                  title: `${wallet.name} added.`,
-                  description: wallet.address,
-                  status: 'success',
-                  duration: 3000,
-                });
-              }
-            );
-          } catch (err) {
-            console.log(err);
-          }
+            setSelectedAddress(wallet.address);
+            setIsAddWalletOpen(false);
+            toast({
+              title: `${wallet.name} added.`,
+              description: wallet.address,
+              status: 'success',
+              duration: 3000,
+            });
+          });
+        } catch (err) {
+          console.log(err);
+        }
 
-          return _wallets;
-        });
-      }
+        return _wallets;
+      });
     },
     [wallets]
   );
