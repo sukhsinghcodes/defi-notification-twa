@@ -8,11 +8,6 @@ import {
   Box,
   Heading,
   MenuDivider,
-  Drawer,
-  DrawerBody,
-  DrawerContent,
-  DrawerHeader,
-  DrawerOverlay,
 } from '@chakra-ui/react';
 import { useCallback, useEffect, useState } from 'react';
 import { BiChevronDown, BiPlusCircle } from 'react-icons/bi';
@@ -21,11 +16,7 @@ import { isTwa } from '../../utils';
 import Twa from '@twa-dev/sdk';
 import { DataDisplayItem, MainButton } from '../../twa-ui-kit';
 import { AddWalletDrawer } from './AddWalletDrawer';
-
-type Wallet = {
-  address: string;
-  name?: string;
-};
+import { Wallet } from './types';
 
 export function WalletMenu() {
   const [selectedAddress, setSelectedAddress] = useState<string | null>(null);
@@ -114,11 +105,11 @@ export function WalletMenu() {
   const addWallet = useCallback(
     (wallet: Wallet) => {
       if (isTwa) {
-        setWallets((w) => {
-          w[wallet.address] = wallet.name || '';
+        setWallets((_wallets) => {
+          _wallets[wallet.address] = wallet.name || '';
 
           try {
-            const walletsStr = JSON.stringify(w);
+            const walletsStr = JSON.stringify(_wallets);
             Twa.CloudStorage.setItem(
               StorageKeys.ADDRESSES,
               walletsStr,
@@ -126,13 +117,15 @@ export function WalletMenu() {
                 if (err) {
                   throw err;
                 }
+
+                setSelectedAddress(wallet.address);
               }
             );
           } catch (err) {
             console.log(err);
           }
 
-          return w;
+          return _wallets;
         });
       }
     },
@@ -176,6 +169,7 @@ export function WalletMenu() {
       <AddWalletDrawer
         isOpen={isAddWalletOpen}
         onClose={() => setIsAddWalletOpen(false)}
+        onSubmit={addWallet}
       />
     </Box>
   );
