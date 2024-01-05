@@ -154,7 +154,10 @@ export function WalletMenu() {
                 </MenuItem>
               ))}
             <MenuDivider />
-            <MenuItem onClick={() => {}} icon={<Icon as={BiPlusCircle} />}>
+            <MenuItem
+              onClick={() => setIsAddWalletOpen(true)}
+              icon={<Icon as={BiPlusCircle} />}
+            >
               Add Wallet
             </MenuItem>
           </MenuList>
