@@ -8,6 +8,7 @@ import {
   Box,
   Heading,
   MenuDivider,
+  useToast,
 } from '@chakra-ui/react';
 import { useCallback, useEffect, useState } from 'react';
 import { BiChevronDown, BiPlusCircle } from 'react-icons/bi';
@@ -22,6 +23,7 @@ export function WalletMenu() {
   const [selectedAddress, setSelectedAddress] = useState<string | null>(null);
   const [wallets, setWallets] = useState<Record<string, string>>({});
   const [isAddWalletOpen, setIsAddWalletOpen] = useState(false);
+  const toast = useToast();
 
   useEffect(() => {
     if (isTwa) {
@@ -119,6 +121,12 @@ export function WalletMenu() {
                 }
 
                 setSelectedAddress(wallet.address);
+                setIsAddWalletOpen(false);
+                toast({
+                  title: `${wallet.name} added.`,
+                  status: 'success',
+                  duration: 3000,
+                });
               }
             );
           } catch (err) {
