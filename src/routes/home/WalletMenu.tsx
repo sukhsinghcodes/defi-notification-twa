@@ -124,6 +124,7 @@ export function WalletMenu() {
                 setIsAddWalletOpen(false);
                 toast({
                   title: `${wallet.name} added.`,
+                  description: wallet.address,
                   status: 'success',
                   duration: 3000,
                 });
