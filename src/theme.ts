@@ -186,6 +186,16 @@ export const theme = extendTheme({
             ),
           },
         }),
+        card: (props) => ({
+          backgroundColor: mode(colors.bg_color, colors.bg_color)(props),
+
+          _hover: {
+            backgroundColor: adjustBrightness(
+              mode(colors.bg_color, colors.bg_color)(props),
+              -0.07
+            ),
+          },
+        }),
       },
     }),
     Input: defineMultiStyleConfig({
