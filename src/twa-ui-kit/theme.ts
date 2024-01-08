@@ -92,7 +92,9 @@ const config: ThemeConfig = {
 
 const secondary_button_color = hexToRgba(colors.button_color, 0.1);
 
-export const theme = extendTheme({
+export const borderRadius = '0.875rem';
+
+export const baseTheme = {
   config,
   fonts: {
     heading: `'ui-rounded',  sans-serif`,
@@ -126,14 +128,14 @@ export const theme = extendTheme({
       baseStyle: (props) => ({
         backgroundColor: mode(colors.bg_color, colors.bg_color)(props),
         color: colors.text_color,
-        borderRadius: '0.875rem',
+        borderRadius,
       }),
     }),
     Text: defineStyleConfig({
       variants: {
         hint: (props) => ({
           color: mode(colors.hint_color, colors.hint_color)(props),
-          fontSize: '0.9375rem',
+          fontSize: '0.875rem',
         }),
         bodyText: {
           fontSize: '1.0625rem',
@@ -146,7 +148,7 @@ export const theme = extendTheme({
       },
       baseStyle: {
         width: '100%',
-        borderRadius: '0.875rem',
+        borderRadius,
         fontSize: '1rem',
       },
       variants: {
@@ -212,7 +214,7 @@ export const theme = extendTheme({
               colors.secondary_bg_color,
               colors.secondary_bg_color
             )(props),
-            borderRadius: '0.875rem',
+            borderRadius,
             _placeholder: {
               color: mode(colors.hint_color, colors.hint_color)(props),
             },
@@ -254,7 +256,7 @@ export const theme = extendTheme({
         inverted: inputParts((props: StyleFunctionProps) => ({
           field: {
             backgroundColor: mode(colors.bg_color, colors.bg_color)(props),
-            borderRadius: '0.875rem',
+            borderRadius,
             _placeholder: {
               color: mode(colors.hint_color, colors.hint_color)(props),
             },
@@ -305,6 +307,23 @@ export const theme = extendTheme({
             mode(colors.bg_color, colors.bg_color)(props),
         }),
       }),
+    }),
+  },
+};
+
+export const theme = extendTheme(baseTheme);
+
+export const altTheme = extendTheme({
+  ...baseTheme,
+  styles: {
+    global: (props: StyleFunctionProps) => ({
+      body: {
+        color: mode(colors.text_color, colors.text_color)(props),
+        backgroundColor: mode(colors.bg_color, colors.bg_color)(props),
+      },
+      a: {
+        color: mode(colors.link_color, colors.link_color)(props),
+      },
     }),
   },
 });

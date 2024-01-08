@@ -1,22 +1,26 @@
-import { Home } from './routes';
+import { HomePage, ProjectPage } from './routes';
 import { UserProvider } from './user';
-import { ChakraProvider, useColorMode } from '@chakra-ui/react';
+import { useColorMode } from '@chakra-ui/react';
 import { useEffect } from 'react';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import { ErrorPage } from './ErrorPage';
-import { theme } from './twa-ui-kit/theme';
 import Twa from '@twa-dev/sdk';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { WagmiConfig } from 'wagmi';
 import { config } from './web3';
+import { ThemeProvider } from './ThemeProvider';
 
 const queryClient = new QueryClient();
 
 const router = createBrowserRouter([
   {
     path: '/',
-    element: <Home />,
+    element: <HomePage />,
     errorElement: <ErrorPage />,
+  },
+  {
+    path: '/project/:projectId',
+    element: <ProjectPage />,
   },
 ]);
 
@@ -24,12 +28,12 @@ export function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <WagmiConfig config={config}>
-        <ChakraProvider theme={theme}>
+        <ThemeProvider>
           <ColorMode />
           <UserProvider>
             <RouterProvider router={router} />
           </UserProvider>
-        </ChakraProvider>
+        </ThemeProvider>
       </WagmiConfig>
     </QueryClientProvider>
   );

@@ -1,8 +1,8 @@
 import {
-  Avatar,
   Container,
   Heading,
   Icon,
+  Image,
   Spinner,
   VStack,
 } from '@chakra-ui/react';
@@ -13,41 +13,34 @@ import { Link } from 'react-router-dom';
 import { StorageKeys, useUser } from '../../user';
 import { useEffect } from 'react';
 import Twa from '@twa-dev/sdk';
-import { isTwa } from '../../utils';
 import { WalletMenu } from './WalletMenu';
-import { setTwaBg } from '../../twa-ui-kit/theme';
 
-export function Home() {
+export function HomePage() {
   const user = useUser();
 
   const { data, isLoading } = useProjects({ enabled: user.isAuthenticated });
 
   useEffect(() => {
     if (user.isAuthenticated) {
-      // do something
-      if (isTwa) {
-        setTwaBg('secondary_bg_color');
+      try {
+        Twa.CloudStorage.getItem(StorageKeys.REVISIT, (err, revisit) => {
+          if (err) {
+            console.log(err);
+            return;
+          }
 
-        try {
-          Twa.CloudStorage.getItem(StorageKeys.REVISIT, (err, revisit) => {
-            if (err) {
-              console.log(err);
-              return;
-            }
-
-            if (!revisit) {
-              Twa.CloudStorage.setItem(StorageKeys.REVISIT, '1', (err) => {
-                if (err) {
-                  console.log(err);
-                  return;
-                }
-                console.log('revisit set');
-              });
-            }
-          });
-        } catch (err) {
-          console.log(err);
-        }
+          if (!revisit) {
+            Twa.CloudStorage.setItem(StorageKeys.REVISIT, '1', (err) => {
+              if (err) {
+                console.log(err);
+                return;
+              }
+              console.log('revisit set');
+            });
+          }
+        });
+      } catch (err) {
+        console.log(err);
       }
     }
   }, []);
@@ -67,14 +60,10 @@ export function Home() {
         ) : (
           <List mode="display">
             {data?.map((project) => (
-              <Link key={project.id} to="#">
+              <Link key={project.id} to={`/project/${project.id}`}>
                 <ListItem
                   StartIconSlot={
-                    <Avatar
-                      src={project.logo}
-                      fontSize={28}
-                      bgColor={project.background}
-                    />
+                    <Image src={project.logo} width={10} height={10} />
                   }
                   StartTextSlot={
                     <Heading as="h3" variant="bodyTitle">
