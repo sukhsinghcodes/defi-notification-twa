@@ -1,5 +1,5 @@
 import { ChakraProvider } from '@chakra-ui/react';
-import { createContext, useContext, useMemo, useState } from 'react';
+import { createContext, useContext, useEffect, useMemo, useState } from 'react';
 import { theme, altTheme, setTwaBg } from './twa-ui-kit/theme';
 
 type ThemeContextProps = {
@@ -23,7 +23,9 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
     [setTheme, selectedTheme]
   );
 
-  console.log('selectedTheme', selectedTheme);
+  useEffect(() => {
+    setTwaBg('secondary_bg_color');
+  }, []);
 
   return (
     <ThemeContext.Provider value={value}>
