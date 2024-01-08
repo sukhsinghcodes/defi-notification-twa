@@ -9,9 +9,11 @@ import {
   Heading,
   MenuDivider,
   useToast,
+  Text,
 } from '@chakra-ui/react';
 import { useCallback, useEffect, useState } from 'react';
 import { BiChevronDown, BiPlusCircle } from 'react-icons/bi';
+import { MdCircle } from 'react-icons/md';
 import { StorageKeys } from '../../user';
 import Twa from '@twa-dev/sdk';
 import { DataDisplayItem, MainButton } from '../../twa-ui-kit';
@@ -132,12 +134,16 @@ export function WalletMenu() {
     <Box>
       {selectedAddress && wallets ? (
         <Menu>
-          <MenuButton as={Button} variant="card">
+          <MenuButton as={Button} variant="card" py={8}>
             <DataDisplayItem
+              StartIconSlot={<Icon as={MdCircle} color={'green'} />}
               StartTextSlot={
-                <Heading as="h3" variant="bodyTitle">
-                  {wallets[selectedAddress]}
-                </Heading>
+                <Box textAlign="left">
+                  <Heading as="h3" variant="bodyTitle">
+                    {wallets[selectedAddress]}
+                  </Heading>
+                  <Text variant="hint">{selectedAddress}</Text>
+                </Box>
               }
               EndIconSlot={<Icon as={BiChevronDown} />}
             />
@@ -146,7 +152,22 @@ export function WalletMenu() {
             {wallets &&
               Object.entries(wallets).map(([address, name]) => (
                 <MenuItem key={address} onClick={() => handleSelect(address)}>
-                  {name != '' ? name : address}
+                  <DataDisplayItem
+                    StartIconSlot={
+                      <Icon
+                        as={MdCircle}
+                        color={address === selectedAddress ? 'green' : 'gray'}
+                      />
+                    }
+                    StartTextSlot={
+                      <Box>
+                        <Heading as="h3" variant="bodyTitle">
+                          {name != '' ? name : address}
+                        </Heading>
+                        <Text variant="hint">{selectedAddress}</Text>
+                      </Box>
+                    }
+                  />
                 </MenuItem>
               ))}
             <MenuDivider />
