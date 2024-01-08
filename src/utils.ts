@@ -38,3 +38,9 @@ export function adjustBrightness(hex: string, brightness = 0): string {
 
 export const isTwa =
   !!Twa.initData || !!new URLSearchParams(window.location.search).get('twa');
+
+export function formatAddress(address: string) {
+  return (
+    address.substring(0, 5) + '...' + address.substring(address.length - 4)
+  );
+}

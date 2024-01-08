@@ -19,6 +19,7 @@ import Twa from '@twa-dev/sdk';
 import { DataDisplayItem, MainButton } from '../../twa-ui-kit';
 import { AddWalletDrawer } from './AddWalletDrawer';
 import { Wallet } from './types';
+import { formatAddress } from '../../utils';
 
 export function WalletMenu() {
   const [selectedAddress, setSelectedAddress] = useState<string | null>(null);
@@ -142,7 +143,7 @@ export function WalletMenu() {
                   <Heading as="h3" variant="bodyTitle">
                     {wallets[selectedAddress]}
                   </Heading>
-                  <Text variant="hint">{selectedAddress}</Text>
+                  <Text variant="hint">{formatAddress(selectedAddress)}</Text>
                 </Box>
               }
               EndIconSlot={<Icon as={BiChevronDown} />}
@@ -162,9 +163,9 @@ export function WalletMenu() {
                     StartTextSlot={
                       <Box>
                         <Heading as="h3" variant="bodyTitle">
-                          {name != '' ? name : address}
+                          {name != '' ? name : formatAddress(address)}
                         </Heading>
-                        <Text variant="hint">{selectedAddress}</Text>
+                        <Text variant="hint">{formatAddress(address)}</Text>
                       </Box>
                     }
                   />
