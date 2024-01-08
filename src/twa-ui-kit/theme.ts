@@ -47,8 +47,6 @@ export function twaMode(light: string | undefined, dark: string | undefined) {
 export function setTwaBg(color: 'bg_color' | 'secondary_bg_color') {
   if (!Twa) return;
 
-  console.log('Setting TWA background color to', color);
-
   Twa.setHeaderColor(color);
   Twa.setBackgroundColor(color);
 }

@@ -32,7 +32,6 @@ export function ProjectPage() {
     setHeaderColor(`#${color}`);
 
     return () => {
-      console.log('unmounting!!!!!!!!!!!!!!!!');
       setHeaderColor('secondary_bg_color');
     };
   }, [setHeaderColor, project]);

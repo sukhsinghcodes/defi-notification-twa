@@ -39,10 +39,7 @@ export function WalletMenu() {
           return;
         }
 
-        console.log('addressesStr', addressesStr);
         const walletsMap = JSON.parse(addressesStr) as Record<string, string>;
-
-        console.log('walletsMap', walletsMap);
 
         setWallets(walletsMap);
       });
@@ -68,8 +65,6 @@ export function WalletMenu() {
           return;
         }
 
-        console.log('address', address);
-
         setSelectedAddress(address);
       });
     } catch (err) {
@@ -85,7 +80,6 @@ export function WalletMenu() {
           return;
         }
 
-        console.log('address set');
         setSelectedAddress(address);
       });
     } catch (err) {

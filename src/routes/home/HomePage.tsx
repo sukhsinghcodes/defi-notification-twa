@@ -36,7 +36,6 @@ export function HomePage() {
                 console.log(err);
                 return;
               }
-              console.log('revisit set');
             });
           }
         });

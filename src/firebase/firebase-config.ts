@@ -12,9 +12,5 @@ const firebaseConfig = {
   measurementId: import.meta.env.VITE_FB_MEASUREMENT_ID,
 };
 
-console.log(firebaseConfig);
-
-// TODO: move into a context provider so we can use it in the app
-
 const app = initializeApp(firebaseConfig);
 export const database = getDatabase(app);
