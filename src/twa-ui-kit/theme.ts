@@ -53,7 +53,9 @@ export function setTwaBg(color: 'bg_color' | 'secondary_bg_color') {
   Twa.setBackgroundColor(color);
 }
 
-export function setHeaderColor(color: `#${string}`) {
+export function setHeaderColor(
+  color: 'bg_color' | 'secondary_bg_color' | `#${string}`
+) {
   if (!Twa) return;
 
   Twa.setHeaderColor(color);

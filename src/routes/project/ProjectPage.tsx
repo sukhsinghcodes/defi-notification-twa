@@ -10,7 +10,7 @@ import { useTheme } from '../../ThemeProvider';
 export function ProjectPage() {
   const { projectId } = useParams<{ projectId: string }>();
   const { data, isLoading } = useProjects({ enabled: !!projectId });
-  const { setHeaderColor, setBg } = useTheme();
+  const { setHeaderColor } = useTheme();
 
   const project = useMemo(() => {
     if (!data) {
@@ -33,7 +33,7 @@ export function ProjectPage() {
 
     return () => {
       console.log('unmounting!!!!!!!!!!!!!!!!');
-      setBg('secondary_bg_color');
+      setHeaderColor('secondary_bg_color');
     };
   }, [setHeaderColor, project]);
 

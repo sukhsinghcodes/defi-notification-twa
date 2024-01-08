@@ -5,7 +5,9 @@ import { theme, altTheme, setTwaBg, setHeaderColor } from './twa-ui-kit/theme';
 type ThemeContextProps = {
   theme: any;
   setBg: (theme: 'bg_color' | 'secondary_bg_color') => void;
-  setHeaderColor: (color: `#${string}`) => void;
+  setHeaderColor: (
+    color: 'bg_color' | 'secondary_bg_color' | `#${string}`
+  ) => void;
 };
 
 const ThemeContext = createContext<ThemeContextProps | null>(null);
@@ -21,7 +23,9 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
         setTheme(_theme);
       },
       theme: selectedTheme,
-      setHeaderColor: (color: `#${string}`) => {
+      setHeaderColor: (
+        color: 'bg_color' | 'secondary_bg_color' | `#${string}`
+      ) => {
         setHeaderColor(color);
       },
     }),
