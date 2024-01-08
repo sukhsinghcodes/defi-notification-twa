@@ -1,35 +1,44 @@
 import { ChakraProvider } from '@chakra-ui/react';
 import { createContext, useContext, useEffect, useMemo, useState } from 'react';
-import { theme, altTheme, setTwaBg } from './twa-ui-kit/theme';
+import { theme, altTheme, setTwaBg, setHeaderColor } from './twa-ui-kit/theme';
 
 type ThemeContextProps = {
   theme: any;
   setBg: (theme: 'bg_color' | 'secondary_bg_color') => void;
+  setHeaderColor: (color: `#${string}`) => void;
 };
 
 const ThemeContext = createContext<ThemeContextProps | null>(null);
 
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
-  const [selectedTheme, setTheme] = useState<any>(theme);
+  const [selectedTheme, setTheme] = useState<'bg_color' | 'secondary_bg_color'>(
+    'secondary_bg_color'
+  );
 
   const value = useMemo(
     () => ({
       setBg: (_theme: 'bg_color' | 'secondary_bg_color') => {
-        setTwaBg(_theme);
-        setTheme(_theme === 'secondary_bg_color' ? theme : altTheme);
+        setTheme(_theme);
       },
       theme: selectedTheme,
+      setHeaderColor: (color: `#${string}`) => {
+        setHeaderColor(color);
+      },
     }),
     [setTheme, selectedTheme]
   );
 
   useEffect(() => {
-    setTwaBg('secondary_bg_color');
-  }, []);
+    setTwaBg(selectedTheme);
+  }, [selectedTheme]);
 
   return (
     <ThemeContext.Provider value={value}>
-      <ChakraProvider theme={selectedTheme}>{children}</ChakraProvider>
+      <ChakraProvider
+        theme={selectedTheme === 'secondary_bg_color' ? theme : altTheme}
+      >
+        {children}
+      </ChakraProvider>
     </ThemeContext.Provider>
   );
 }
