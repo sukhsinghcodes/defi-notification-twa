@@ -1,5 +1,6 @@
 import {
   Container,
+  HStack,
   Heading,
   Icon,
   Image,
@@ -45,18 +46,28 @@ export function HomePage() {
     }
   }, []);
 
+  if (user.isSigningIn) {
+    return (
+      <Container>
+        <VStack
+          justifyContent={'center'}
+          alignItems={'center'}
+          height={'100vh'}
+        >
+          <Spinner />
+        </VStack>
+      </Container>
+    );
+  }
+
   return (
     <Container>
-      <VStack spacing={8} mb={8} alignItems="stretch">
-        <div>
-          <Heading as="h1" size="lg">
-            {user.isAuthenticated ? `Logged In!` : 'Not Logged In.'}
-          </Heading>
-          {user.userId && <p>userId: {user.userId}</p>}
-        </div>
+      <VStack spacing={8} mb={8} pt={8} alignItems="stretch">
         <WalletMenu />
         {isLoading ? (
-          <Spinner />
+          <HStack justifyContent={'center'} alignItems={'center'}>
+            <Spinner />
+          </HStack>
         ) : (
           <List mode="display">
             {data?.map((project) => (
