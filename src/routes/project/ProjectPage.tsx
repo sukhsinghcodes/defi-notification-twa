@@ -1,19 +1,10 @@
-import {
-  Box,
-  Container,
-  Heading,
-  Icon,
-  Image,
-  Text,
-  VStack,
-} from '@chakra-ui/react';
+import { Box, Container, Heading, Icon, Image, VStack } from '@chakra-ui/react';
 import { Link, useParams } from 'react-router-dom';
 import { useProjects } from '../../firebase';
 import { useMemo } from 'react';
 import { borderRadius, colors } from '../../twa-ui-kit/theme';
 import { BackButton, List, ListItem } from '../../twa-ui-kit';
 import { BiPlusCircle } from 'react-icons/bi';
-import { MdCircle } from 'react-icons/md';
 
 export function ProjectPage() {
   const { projectId } = useParams<{ projectId: string }>();
