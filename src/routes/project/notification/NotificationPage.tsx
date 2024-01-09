@@ -8,8 +8,9 @@ import {
   FormControl,
   Input,
   FormLabel,
+  useToast,
 } from '@chakra-ui/react';
-import { useOutletContext, useParams } from 'react-router-dom';
+import { useNavigate, useOutletContext, useParams } from 'react-router-dom';
 import { Project, Subscription } from '../../../firebase/types';
 import { useCallback, useMemo } from 'react';
 import { Card, DataDisplayItem, MainButton } from '../../../twa-ui-kit';
@@ -26,6 +27,8 @@ export function NotificationPage() {
   const { selectedAddress, userId, telegramUser } = useUser();
   const { project } = useOutletContext<{ project: Project }>();
   const { notificationId } = useParams<{ notificationId: string }>();
+  const toast = useToast();
+  const navigate = useNavigate();
 
   const notification = useMemo(() => {
     if (!project) {
@@ -94,24 +97,44 @@ export function NotificationPage() {
             ...rest,
           },
         };
+        try {
+          await mutateAsync({
+            userId,
+            telegramId: telegramUser.id,
+            subscription,
+          });
 
-        await mutateAsync({
-          userId,
-          telegramId: telegramUser.id,
-          subscription,
-        });
+          toast({
+            title: 'Subscribed',
+            status: 'success',
+            duration: 2000,
+          });
+
+          form.reset();
+          //redirect to project page
+          navigate(`/project/${project.id}`);
+        } catch (err) {
+          console.log(err);
+          toast({
+            title: 'Something went wrong',
+            status: 'error',
+            duration: 2000,
+          });
+        }
       }
-
       submit();
     },
     [
-      mutateAsync,
       notification,
       subscribeForm,
       userId,
       selectedAddress,
-      telegramUser,
-      project,
+      telegramUser?.id,
+      project.id,
+      mutateAsync,
+      toast,
+      form,
+      navigate,
     ]
   );
 

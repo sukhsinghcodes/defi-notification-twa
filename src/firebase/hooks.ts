@@ -172,6 +172,7 @@ export function useAddOrUpdateSubscription() {
           uid: pushRef.key,
         });
 
+        // TODO: needs to be more efficient and only invalidate the project + have a get project query
         await queryClient.invalidateQueries({ queryKey: ['projects'] });
 
         return true;
