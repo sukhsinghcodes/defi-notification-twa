@@ -1,10 +1,9 @@
-import { Box, Container, Heading, Icon, Image, VStack } from '@chakra-ui/react';
-import { Link, useParams } from 'react-router-dom';
+import { Box, Container, Heading, Image, VStack } from '@chakra-ui/react';
+import { Outlet, useParams } from 'react-router-dom';
 import { useProjects } from '../../firebase';
 import { useEffect, useMemo } from 'react';
 import { borderRadius, colors } from '../../twa-ui-kit/theme';
-import { BackButton, List, ListItem } from '../../twa-ui-kit';
-import { BiPlusCircle } from 'react-icons/bi';
+import { BackButton } from '../../twa-ui-kit';
 import { useTheme } from '../../ThemeProvider';
 
 export function ProjectPage() {
@@ -60,37 +59,7 @@ export function ProjectPage() {
         backgroundColor={colors.secondary_bg_color}
       >
         <Container>
-          <VStack spacing={4} py={8} alignItems="stretch">
-            <List mode="display">
-              {project.notificationDefinitions.map((noti) => (
-                <Link
-                  key={noti.notificationId}
-                  to={`notification/${noti.notificationId}`}
-                >
-                  <ListItem
-                    StartIconSlot={
-                      <Image
-                        src={`/networks/${
-                          noti.network ? noti.network : project.network
-                        }.png`}
-                        width={10}
-                        height={10}
-                        fallbackSrc="/networks/generic.png"
-                      />
-                    }
-                    StartTextSlot={
-                      <Box>
-                        <Heading as="h3" variant="bodyTitle">
-                          {noti.displayName}
-                        </Heading>
-                      </Box>
-                    }
-                    EndIconSlot={<Icon as={BiPlusCircle} />}
-                  />
-                </Link>
-              ))}
-            </List>
-          </VStack>
+          <Outlet context={{ project }} />
         </Container>
       </Box>
     </VStack>

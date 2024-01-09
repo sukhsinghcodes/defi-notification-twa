@@ -1,4 +1,4 @@
-import { HomePage, ProjectPage } from './routes';
+import { HomePage, ProjectIndex, ProjectPage } from './routes';
 import { UserProvider } from './user';
 import { useColorMode } from '@chakra-ui/react';
 import { useEffect } from 'react';
@@ -9,6 +9,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { WagmiConfig } from 'wagmi';
 import { config } from './web3';
 import { ThemeProvider } from './ThemeProvider';
+import { NotificationPage } from './routes/project/notification';
 
 const queryClient = new QueryClient();
 
@@ -21,6 +22,16 @@ const router = createBrowserRouter([
   {
     path: '/project/:projectId',
     element: <ProjectPage />,
+    children: [
+      {
+        index: true,
+        element: <ProjectIndex />,
+      },
+      {
+        path: '/project/:projectId/notification/:notificationId',
+        element: <NotificationPage />,
+      },
+    ],
   },
 ]);
 

@@ -35,11 +35,22 @@ export type NotificationDefinition = {
   notificationId: string;
   displayName: string;
   description: string;
-
   network?: string;
   displayIcon?: string;
   subscribeForm?: SubscribeForm;
   subscriptions?: Subscription[];
+};
+
+export type ProjectResponse = {
+  name: string;
+  category: string;
+  website: string;
+  logo: string;
+  background: string[] | string;
+  foreground: string;
+  network: string;
+  notificationDefinitions: { [key: string]: NotificationDefinition };
+  id: string;
 };
 
 export type Project = {
@@ -50,6 +61,14 @@ export type Project = {
   background: string[];
   foreground: string;
   network: string;
-  notificationDefinitions: { [key: string]: NotificationDefinition };
+  notificationDefinitions: {
+    subscribeForm: Control[] | null;
+    subscriptions: Subscription[];
+    notificationId: string;
+    displayName: string;
+    description: string;
+    network?: string | undefined;
+    displayIcon?: string | undefined;
+  }[];
   id: string;
 };

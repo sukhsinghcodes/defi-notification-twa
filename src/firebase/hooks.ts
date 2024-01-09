@@ -3,7 +3,7 @@ import { ref, get, child, set } from 'firebase/database';
 import { database } from './firebase-config';
 import { useQuery } from '@tanstack/react-query';
 import { httpsCallable, getFunctions } from 'firebase/functions';
-import { Project } from './types';
+import { ProjectResponse } from './types';
 
 export function useSignIn({ enabled = true }) {
   return useQuery({
@@ -51,7 +51,7 @@ export function useProjects({ enabled = true }) {
         // use firebase functions to get projects using httpsCallable
         const { data } = await getProjects();
 
-        const projectsData = data as Project[];
+        const projectsData = data as ProjectResponse[];
 
         const projects = projectsData.map((project) => {
           return {
