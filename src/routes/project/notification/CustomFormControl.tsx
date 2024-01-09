@@ -2,7 +2,7 @@ import {
   FormControl,
   FormLabel,
   Input,
-  Select,
+  SelectField,
   VisuallyHiddenInput,
 } from '@chakra-ui/react';
 import { Control } from '../../../firebase/types';
@@ -29,7 +29,6 @@ export function CustomFormControl({ control, register }: FormControlProps) {
               {...register(control.id)}
               type="text"
               placeholder={control.label}
-              value={control.value || ''}
               defaultValue={control.defaultValue || ''}
             />
           </FormControl>
@@ -41,15 +40,14 @@ export function CustomFormControl({ control, register }: FormControlProps) {
         <Card>
           <FormControl>
             <FormLabel>{control.label}</FormLabel>
-            <Select
+            <SelectField
               {...register(control.id)}
-              value={control.value || ''}
               defaultValue={control.defaultValue || ''}
             >
               {control.selectOptions?.map((option) => (
                 <option value={option.value}>{option.label}</option>
               ))}
-            </Select>
+            </SelectField>
           </FormControl>
         </Card>
       );
@@ -68,7 +66,6 @@ export function CustomFormControl({ control, register }: FormControlProps) {
       Comp = (
         <VisuallyHiddenInput
           {...register(control.id)}
-          value={control.value || ''}
           defaultValue={control.defaultValue || ''}
         />
       );
