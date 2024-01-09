@@ -45,15 +45,16 @@ export function ProjectPage() {
       <Box backgroundColor={project.background[0]} pt={8} pb={16}>
         <Container>
           <VStack spacing={4}>
-            <Image
-              src={project.logo}
-              width={20}
-              height={20}
-              borderRadius="full"
-              p={2}
-              alt={project.name}
-              backgroundColor={project.background[0]}
-            />
+            <Box borderRadius="full" overflow="hidden">
+              <Image
+                src={project.logo}
+                width={20}
+                height={20}
+                p={3}
+                alt={project.name}
+                backgroundColor={project.background[0]}
+              />
+            </Box>
             <Heading as="h1" size="md" color={project.foreground}>
               {project.name}
             </Heading>
