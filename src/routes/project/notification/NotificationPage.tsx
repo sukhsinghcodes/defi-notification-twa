@@ -20,7 +20,7 @@ import {
 } from '../../../firebase';
 import { useUser } from '../../../user';
 import { CustomFormControl } from './CustomFormControl';
-import { useForm } from 'react-hook-form';
+import { UseFormRegister, useForm } from 'react-hook-form';
 import { formatAddress } from '../../../utils';
 
 export function NotificationPage() {
@@ -181,10 +181,18 @@ export function NotificationPage() {
           </FormControl>
         </Card>
         {subscribeForm.controls.map((control) => (
-          <CustomFormControl key={control.id} control={control} />
+          <CustomFormControl
+            key={control.id}
+            control={control}
+            register={
+              form.register as unknown as UseFormRegister<{
+                [name: string]: string;
+              }>
+            }
+          />
         ))}
         <MainButton
-          text="Subscribe"
+          text="Save"
           onClick={form.handleSubmit(onSubmit)}
           progress={isPending}
           disabled={isPending}

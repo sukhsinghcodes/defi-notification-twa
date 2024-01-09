@@ -8,12 +8,14 @@ import {
 import { Control } from '../../../firebase/types';
 import { Card } from '../../../twa-ui-kit';
 import { CustomNumberInput } from './CustomNumberInput';
+import { UseFormRegister } from 'react-hook-form';
 
 type FormControlProps = {
   control: Control;
+  register: UseFormRegister<{ [name: string]: string }>;
 };
 
-export function CustomFormControl({ control }: FormControlProps) {
+export function CustomFormControl({ control, register }: FormControlProps) {
   let Comp = null;
 
   switch (control.type) {
@@ -24,6 +26,7 @@ export function CustomFormControl({ control }: FormControlProps) {
           <FormControl>
             <FormLabel>{control.label}</FormLabel>
             <Input
+              {...register(control.id)}
               type="text"
               placeholder={control.label}
               value={control.value || ''}
@@ -39,6 +42,7 @@ export function CustomFormControl({ control }: FormControlProps) {
           <FormControl>
             <FormLabel>{control.label}</FormLabel>
             <Select
+              {...register(control.id)}
               value={control.value || ''}
               defaultValue={control.defaultValue || ''}
             >
@@ -55,7 +59,7 @@ export function CustomFormControl({ control }: FormControlProps) {
         <Card>
           <FormControl>
             <FormLabel>{control.label}</FormLabel>
-            <CustomNumberInput control={control} />
+            <CustomNumberInput control={control} register={register} />
           </FormControl>
         </Card>
       );
@@ -63,7 +67,7 @@ export function CustomFormControl({ control }: FormControlProps) {
     case 'hidden':
       Comp = (
         <VisuallyHiddenInput
-          name={control.id}
+          {...register(control.id)}
           value={control.value || ''}
           defaultValue={control.defaultValue || ''}
         />

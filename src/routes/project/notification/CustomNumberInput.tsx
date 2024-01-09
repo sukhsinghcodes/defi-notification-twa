@@ -7,12 +7,17 @@ import {
 } from '@chakra-ui/react';
 import { Control } from '../../../firebase/types';
 import { BiMinusCircle, BiPlusCircle } from 'react-icons/bi';
+import { UseFormRegister } from 'react-hook-form';
 
 type CustomNumberInputProps = {
   control: Control;
+  register: UseFormRegister<{ [name: string]: string }>;
 };
 
-export function CustomNumberInput({ control }: CustomNumberInputProps) {
+export function CustomNumberInput({
+  control,
+  register,
+}: CustomNumberInputProps) {
   const { getInputProps, getIncrementButtonProps, getDecrementButtonProps } =
     useNumberInput({
       step: 1,
@@ -34,7 +39,7 @@ export function CustomNumberInput({ control }: CustomNumberInputProps) {
         flexShrink={2}
         icon={<Icon as={BiMinusCircle} />}
       />
-      <Input {...input} />
+      <Input {...register(control.id)} {...input} />
       <IconButton
         {...inc}
         aria-label="increment"
