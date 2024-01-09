@@ -47,8 +47,10 @@ export function ProjectPage() {
           <VStack spacing={4}>
             <Image
               src={project.logo}
-              width={16}
-              height={16}
+              width={20}
+              height={20}
+              borderRadius="full"
+              p={2}
               alt={project.name}
               backgroundColor={project.background[0]}
             />
