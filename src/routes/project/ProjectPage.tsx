@@ -49,7 +49,6 @@ export function ProjectPage() {
               src={project.logo}
               width={16}
               height={16}
-              borderRadius="full"
               alt={project.name}
               backgroundColor={project.background[0]}
             />
