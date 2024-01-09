@@ -2,13 +2,13 @@ import {
   FormControl,
   FormLabel,
   Input,
-  SelectField,
+  Select,
   VisuallyHiddenInput,
 } from '@chakra-ui/react';
 import { Control } from '../../../firebase/types';
 import { Card } from '../../../twa-ui-kit';
 import { CustomNumberInput } from './CustomNumberInput';
-import { UseFormRegister } from 'react-hook-form';
+import { Controller, UseFormRegister } from 'react-hook-form';
 
 type FormControlProps = {
   control: Control;
@@ -40,14 +40,16 @@ export function CustomFormControl({ control, register }: FormControlProps) {
         <Card>
           <FormControl>
             <FormLabel>{control.label}</FormLabel>
-            <SelectField
+            <Controller
               {...register(control.id)}
-              defaultValue={control.defaultValue || ''}
-            >
-              {control.selectOptions?.map((option) => (
-                <option value={option.value}>{option.label}</option>
-              ))}
-            </SelectField>
+              render={({ field }) => (
+                <Select {...field} defaultValue={control.defaultValue || ''}>
+                  {control.selectOptions?.map((option) => (
+                    <option value={option.value}>{option.label}</option>
+                  ))}
+                </Select>
+              )}
+            />
           </FormControl>
         </Card>
       );
