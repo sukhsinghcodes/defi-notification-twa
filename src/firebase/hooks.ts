@@ -3,7 +3,7 @@ import { ref, get, child, set } from 'firebase/database';
 import { database } from './firebase-config';
 import { useQuery } from '@tanstack/react-query';
 import { httpsCallable, getFunctions } from 'firebase/functions';
-import { ProjectResponse } from './types';
+import { ProjectResponse, SubscribeForm } from './types';
 
 export function useSignIn({ enabled = true }) {
   return useQuery({
@@ -53,6 +53,8 @@ export function useProjects({ enabled = true }) {
 
         const projectsData = data as ProjectResponse[];
 
+        console.log('projectsData', projectsData);
+
         const projects = projectsData.map((project) => {
           return {
             ...project,
@@ -76,7 +78,52 @@ export function useProjects({ enabled = true }) {
               : [],
           };
         });
+
+        console.log('parsed', projects);
         return projects;
+      } catch (err) {
+        console.log(err);
+        throw err;
+      }
+    },
+    enabled,
+  });
+}
+
+type UseSubscribeFormArgs = {
+  enabled: boolean;
+  projectId: string;
+  notificationId: string;
+  address: string;
+};
+
+export function useSubscribeForm({
+  enabled = true,
+  projectId,
+  notificationId,
+  address,
+}: UseSubscribeFormArgs) {
+  const functions = getFunctions();
+  const getSubscribeForm = httpsCallable(functions, 'getSubscribeForm');
+
+  return useQuery({
+    queryKey: ['subscribeForm'],
+    queryFn: async () => {
+      try {
+        const { data } = await getSubscribeForm({
+          projectId,
+          notificationId,
+          address: address.toLowerCase(),
+        });
+
+        const subscribeFormData = data as SubscribeForm;
+        console.log('subscribeFormData', subscribeFormData);
+
+        return {
+          controls: Object.values(subscribeFormData.controls).sort(
+            (a, b) => a.index - b.index
+          ),
+        };
       } catch (err) {
         console.log(err);
         throw err;

@@ -16,6 +16,8 @@ type UserContextProps = {
   isServerDev: boolean | undefined;
   isSigningIn: boolean;
   telegramUser: TelegramUser | null;
+  selectedAddress: string | null;
+  setSelectedAddress: (address: string | null) => void;
 };
 
 const UserContext = createContext<UserContextProps | null>(null);
@@ -24,6 +26,7 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
   const [signedIn, setSignedIn] = useState(false);
   const { data, isLoading, error } = useSignIn({ enabled: !signedIn });
   const [telegramUser, setTelegramUser] = useState<TelegramUser | null>(null);
+  const [selectedAddress, setSelectedAddress] = useState<string | null>(null);
 
   useEffect(() => {
     if (signedIn || !data?.userId) {
@@ -59,6 +62,8 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
       isServerDev: data?.isServerDev,
       isSigningIn: isLoading,
       telegramUser,
+      selectedAddress,
+      setSelectedAddress,
     }),
     [signedIn]
   );

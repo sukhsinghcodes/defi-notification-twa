@@ -14,7 +14,7 @@ import {
 import { useCallback, useEffect, useState } from 'react';
 import { BiChevronDown, BiPlusCircle } from 'react-icons/bi';
 import { MdCircle } from 'react-icons/md';
-import { StorageKeys } from '../../user';
+import { StorageKeys, useUser } from '../../user';
 import Twa from '@twa-dev/sdk';
 import { DataDisplayItem, MainButton } from '../../twa-ui-kit';
 import { AddWalletDrawer } from './AddWalletDrawer';
@@ -22,7 +22,7 @@ import { Wallet } from './types';
 import { formatAddress } from '../../utils';
 
 export function WalletMenu() {
-  const [selectedAddress, setSelectedAddress] = useState<string | null>(null);
+  const { selectedAddress, setSelectedAddress } = useUser();
   const [wallets, setWallets] = useState<Record<string, string>>({});
   const [isAddWalletOpen, setIsAddWalletOpen] = useState(false);
   const toast = useToast();

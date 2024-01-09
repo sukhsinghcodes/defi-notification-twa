@@ -25,7 +25,7 @@ export function MainButton(props: MainButtonProps) {
         disabled={props.disabled}
         variant="primary"
       >
-        {props.text?.toUpperCase()}
+        {props.text}
       </Button>
     );
   }
@@ -37,7 +37,7 @@ export function MainButton(props: MainButtonProps) {
           ? colors.button_disabed_color
           : colors.button_color
       }
-      text={props.text?.toUpperCase()}
+      text={props.text}
     />
   );
 }

@@ -4,7 +4,7 @@ export type SelectOption = {
 };
 
 export type Control = {
-  readonly uid: string;
+  readonly id: string;
   readonly type: string;
   readonly label: string;
   readonly suffix?: string | null;
@@ -14,7 +14,7 @@ export type Control = {
   readonly index: number;
   readonly internal: boolean;
   readonly isOptional: boolean;
-  readonly selectOptions: SelectOption[];
+  readonly selectOptions: SelectOption[] | null;
 };
 
 export type SubscribeForm = {
@@ -62,7 +62,6 @@ export type Project = {
   foreground: string;
   network: string;
   notificationDefinitions: {
-    subscribeForm: Control[] | null;
     subscriptions: Subscription[];
     notificationId: string;
     displayName: string;
