@@ -170,6 +170,8 @@ export function useAddOrUpdateSubscription() {
           uid: pushRef.key,
         });
 
+        // TODO: invalidate cache for projects query
+
         return true;
       } catch (err) {
         console.log(err);
