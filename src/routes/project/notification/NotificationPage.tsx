@@ -70,7 +70,7 @@ export function NotificationPage() {
     },
   });
 
-  const { mutateAsync } = useAddOrUpdateSubscription();
+  const { mutateAsync, isPending } = useAddOrUpdateSubscription();
 
   const onSubmit = useCallback(
     (values: { title: string; [key: string]: string }) => {
@@ -183,7 +183,12 @@ export function NotificationPage() {
         {subscribeForm.controls.map((control) => (
           <CustomFormControl key={control.id} control={control} />
         ))}
-        <MainButton text="Subscribe" onClick={form.handleSubmit(onSubmit)} />
+        <MainButton
+          text="Subscribe"
+          onClick={form.handleSubmit(onSubmit)}
+          progress={isPending}
+          disabled={isPending}
+        />
       </VStack>
     </form>
   );
