@@ -1,7 +1,7 @@
 import { getAuth, signInAnonymously } from 'firebase/auth';
 import { ref, get, child, set, update, push } from 'firebase/database';
 import { database } from './firebase-config';
-import { useMutation, useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { httpsCallable, getFunctions } from 'firebase/functions';
 import { ProjectResponse, SubscribeForm, Subscription } from './types';
 
@@ -140,6 +140,8 @@ type UseAddOrUpdateSubscription = {
 };
 
 export function useAddOrUpdateSubscription() {
+  const queryClient = useQueryClient();
+
   return useMutation({
     mutationKey: ['addOrUpdateSubscription'],
     mutationFn: async ({
@@ -170,7 +172,7 @@ export function useAddOrUpdateSubscription() {
           uid: pushRef.key,
         });
 
-        // TODO: invalidate cache for projects query
+        await queryClient.invalidateQueries({ queryKey: ['projects'] });
 
         return true;
       } catch (err) {
