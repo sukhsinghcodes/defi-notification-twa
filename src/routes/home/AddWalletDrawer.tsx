@@ -78,7 +78,7 @@ export function AddWalletDrawer({
       }
     }
     paste();
-  }, [toast]);
+  }, [form, toast]);
 
   return (
     <Drawer

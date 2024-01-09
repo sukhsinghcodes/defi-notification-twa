@@ -10,16 +10,20 @@ import {
   FormLabel,
 } from '@chakra-ui/react';
 import { useOutletContext, useParams } from 'react-router-dom';
-import { Project } from '../../../firebase/types';
-import { useMemo } from 'react';
+import { Project, Subscription } from '../../../firebase/types';
+import { useCallback, useMemo } from 'react';
 import { Card, DataDisplayItem, MainButton } from '../../../twa-ui-kit';
-import { useSubscribeForm } from '../../../firebase';
+import {
+  useAddOrUpdateSubscription,
+  useSubscribeForm,
+} from '../../../firebase';
 import { useUser } from '../../../user';
 import { CustomFormControl } from './CustomFormControl';
 import { useForm } from 'react-hook-form';
+import { formatAddress } from '../../../utils';
 
 export function NotificationPage() {
-  const { selectedAddress } = useUser();
+  const { selectedAddress, userId, telegramUser } = useUser();
   const { project } = useOutletContext<{ project: Project }>();
   const { notificationId } = useParams<{ notificationId: string }>();
 
@@ -31,13 +35,13 @@ export function NotificationPage() {
     return project.notificationDefinitions.find(
       (noti) => noti.notificationId === notificationId
     );
-  }, [project, notificationId, selectedAddress]);
+  }, [project, notificationId]);
 
   const { data: subscribeForm } = useSubscribeForm({
     notificationId: notificationId || '',
     enabled: !!notificationId,
     projectId: project.id,
-    address: selectedAddress || '0x1dB22ECECd410874f1949a30584490741cDEdb18',
+    address: selectedAddress || '',
   });
 
   const fields = useMemo(() => {
@@ -45,10 +49,13 @@ export function NotificationPage() {
       return [];
     }
 
-    return subscribeForm.controls.reduce((prev, control) => ({
-      ...prev,
-      [control.id]: control.value || control.defaultValue || '',
-    }));
+    return subscribeForm.controls.reduce(
+      (prev, control) => ({
+        ...prev,
+        [control.id]: control.value || control.defaultValue || '',
+      }),
+      {}
+    );
   }, [subscribeForm]);
 
   console.log(fields);
@@ -59,6 +66,54 @@ export function NotificationPage() {
       ...fields,
     },
   });
+
+  const { mutateAsync } = useAddOrUpdateSubscription();
+
+  const onSubmit = useCallback(
+    (values: { title: string; [key: string]: string }) => {
+      async function submit() {
+        if (
+          !notification ||
+          !subscribeForm ||
+          !userId ||
+          !selectedAddress ||
+          !telegramUser?.id
+        ) {
+          return;
+        }
+
+        const { title, ...rest } = values;
+
+        const subscription: Subscription = {
+          displayName: title !== '' ? title : formatAddress(selectedAddress),
+          notificationId: notification.notificationId,
+          projectId: project.id,
+          address: selectedAddress,
+          userId,
+          subscriptionValues: {
+            ...rest,
+          },
+        };
+
+        await mutateAsync({
+          userId,
+          telegramId: telegramUser.id,
+          subscription,
+        });
+      }
+
+      submit();
+    },
+    [
+      mutateAsync,
+      notification,
+      subscribeForm,
+      userId,
+      selectedAddress,
+      telegramUser,
+      project,
+    ]
+  );
 
   if (!notification || !subscribeForm) {
     return (
@@ -105,10 +160,7 @@ export function NotificationPage() {
         {subscribeForm.controls.map((control) => (
           <CustomFormControl key={control.id} control={control} />
         ))}
-        <MainButton
-          text="Subscribe"
-          onClick={form.handleSubmit((data) => console.log(data))}
-        />
+        <MainButton text="Subscribe" onClick={form.handleSubmit(onSubmit)} />
       </VStack>
     </form>
   );

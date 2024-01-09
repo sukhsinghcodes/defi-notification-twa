@@ -1,9 +1,9 @@
 import { getAuth, signInAnonymously } from 'firebase/auth';
-import { ref, get, child, set } from 'firebase/database';
+import { ref, get, child, set, update, push } from 'firebase/database';
 import { database } from './firebase-config';
-import { useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery } from '@tanstack/react-query';
 import { httpsCallable, getFunctions } from 'firebase/functions';
-import { ProjectResponse, SubscribeForm } from './types';
+import { ProjectResponse, SubscribeForm, Subscription } from './types';
 
 export function useSignIn({ enabled = true }) {
   return useQuery({
@@ -61,7 +61,7 @@ export function useProjects({ enabled = true }) {
             background: !Array.isArray(project.background)
               ? [project.background]
               : project.background,
-            notificationDefinitions: Boolean(project.notificationDefinitions)
+            notificationDefinitions: project.notificationDefinitions
               ? Object.values(project.notificationDefinitions).map((def) => {
                   return {
                     ...def,
@@ -130,5 +130,51 @@ export function useSubscribeForm({
       }
     },
     enabled,
+  });
+}
+
+type UseAddOrUpdateSubscription = {
+  userId: string;
+  telegramId: number;
+  subscription: Subscription;
+};
+
+export function useAddOrUpdateSubscription() {
+  return useMutation({
+    mutationKey: ['addOrUpdateSubscription'],
+    mutationFn: async ({
+      userId,
+      telegramId,
+      subscription,
+    }: UseAddOrUpdateSubscription) => {
+      try {
+        const userRef = ref(database, `users/${userId}`);
+        const userSnapshot = await get(userRef);
+
+        if (!userSnapshot.exists()) {
+          throw new Error('No user data available');
+        }
+
+        await update(child(userRef, 'telegramId'), { telegramId });
+
+        const subscriptionRef = ref(database, 'subscriptions');
+
+        if (subscription.uid) {
+          await set(child(subscriptionRef, subscription.uid), subscription);
+          return true;
+        }
+
+        const pushRef = push(subscriptionRef);
+        await set(pushRef, {
+          ...subscription,
+          uid: pushRef.key,
+        });
+
+        return true;
+      } catch (err) {
+        console.log(err);
+        throw err;
+      }
+    },
   });
 }

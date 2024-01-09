@@ -70,22 +70,29 @@ export function WalletMenu() {
     } catch (err) {
       console.log(err);
     }
-  }, []);
+  }, [setSelectedAddress, wallets]);
 
-  const handleSelect = useCallback((address: string) => {
-    try {
-      Twa.CloudStorage.setItem(StorageKeys.SELECTED_ADDRESS, address, (err) => {
-        if (err) {
-          console.log(err);
-          return;
-        }
+  const handleSelect = useCallback(
+    (address: string) => {
+      try {
+        Twa.CloudStorage.setItem(
+          StorageKeys.SELECTED_ADDRESS,
+          address,
+          (err) => {
+            if (err) {
+              console.log(err);
+              return;
+            }
 
-        setSelectedAddress(address);
-      });
-    } catch (err) {
-      console.log(err);
-    }
-  }, []);
+            setSelectedAddress(address);
+          }
+        );
+      } catch (err) {
+        console.log(err);
+      }
+    },
+    [setSelectedAddress]
+  );
 
   console.log('selectedAddress', selectedAddress);
   console.log('wallets', wallets);
@@ -125,7 +132,7 @@ export function WalletMenu() {
         return _wallets;
       });
     },
-    [wallets]
+    [setSelectedAddress, toast]
   );
 
   return (

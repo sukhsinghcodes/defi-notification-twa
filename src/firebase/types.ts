@@ -5,6 +5,7 @@ export type SelectOption = {
 
 export type Control = {
   readonly id: string;
+  readonly uid: string;
   readonly type: string;
   readonly label: string;
   readonly suffix?: string | null;

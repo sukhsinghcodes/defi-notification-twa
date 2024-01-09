@@ -46,7 +46,7 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
     }
 
     setSignedIn(true);
-  }, [data?.userId]);
+  }, [data?.userId, signedIn]);
 
   useEffect(() => {
     if (error) {
@@ -65,7 +65,14 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
       selectedAddress,
       setSelectedAddress,
     }),
-    [signedIn, data?.userId, isLoading, telegramUser, selectedAddress]
+    [
+      signedIn,
+      data?.userId,
+      data?.isServerDev,
+      isLoading,
+      telegramUser,
+      selectedAddress,
+    ]
   );
 
   return <UserContext.Provider value={value}>{children}</UserContext.Provider>;

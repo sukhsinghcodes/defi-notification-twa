@@ -43,7 +43,7 @@ export function HomePage() {
         console.log(err);
       }
     }
-  }, []);
+  }, [user.isAuthenticated]);
 
   if (user.isSigningIn) {
     return (

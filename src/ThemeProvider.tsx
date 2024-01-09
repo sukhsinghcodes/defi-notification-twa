@@ -3,7 +3,7 @@ import { createContext, useContext, useEffect, useMemo, useState } from 'react';
 import { theme, altTheme, setTwaBg, setHeaderColor } from './twa-ui-kit/theme';
 
 type ThemeContextProps = {
-  theme: any;
+  theme: unknown;
   setBg: (theme: 'bg_color' | 'secondary_bg_color') => void;
   setHeaderColor: (
     color: 'bg_color' | 'secondary_bg_color' | `#${string}`
