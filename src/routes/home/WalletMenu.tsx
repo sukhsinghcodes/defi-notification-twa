@@ -87,6 +87,9 @@ export function WalletMenu() {
     }
   }, []);
 
+  console.log('selectedAddress', selectedAddress);
+  console.log('wallets', wallets);
+
   const addWalletSubmit = useCallback(
     (wallet: Wallet) => {
       setWallets((_wallets) => {

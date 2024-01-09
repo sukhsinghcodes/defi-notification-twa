@@ -65,7 +65,7 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
       selectedAddress,
       setSelectedAddress,
     }),
-    [signedIn]
+    [signedIn, data?.userId, isLoading, telegramUser, selectedAddress]
   );
 
   return <UserContext.Provider value={value}>{children}</UserContext.Provider>;
