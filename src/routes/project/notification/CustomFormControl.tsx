@@ -8,14 +8,23 @@ import {
 import { Control } from '../../../firebase/types';
 import { Card } from '../../../twa-ui-kit';
 import { CustomNumberInput } from './CustomNumberInput';
-import { Controller, UseFormRegister } from 'react-hook-form';
+import {
+  Controller,
+  UseFormRegister,
+  Control as RhfControl,
+} from 'react-hook-form';
 
 type FormControlProps = {
   control: Control;
   register: UseFormRegister<{ [name: string]: string }>;
+  rhfControl: RhfControl;
 };
 
-export function CustomFormControl({ control, register }: FormControlProps) {
+export function CustomFormControl({
+  control,
+  register,
+  rhfControl,
+}: FormControlProps) {
   let Comp = null;
 
   switch (control.type) {
@@ -41,7 +50,8 @@ export function CustomFormControl({ control, register }: FormControlProps) {
           <FormControl>
             <FormLabel>{control.label}</FormLabel>
             <Controller
-              {...register(control.id)}
+              name={control.id}
+              control={rhfControl}
               render={({ field }) => (
                 <Select {...field} defaultValue={control.defaultValue || ''}>
                   {control.selectOptions?.map((option) => (

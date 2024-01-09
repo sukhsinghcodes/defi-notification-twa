@@ -20,7 +20,7 @@ import {
 } from '../../../firebase';
 import { useUser } from '../../../user';
 import { CustomFormControl } from './CustomFormControl';
-import { UseFormRegister, useForm } from 'react-hook-form';
+import { Control, UseFormRegister, useForm } from 'react-hook-form';
 import { formatAddress } from '../../../utils';
 
 export function NotificationPage() {
@@ -184,6 +184,7 @@ export function NotificationPage() {
           <CustomFormControl
             key={control.id}
             control={control}
+            rhfControl={form.control as unknown as Control}
             register={
               form.register as unknown as UseFormRegister<{
                 [name: string]: string;
