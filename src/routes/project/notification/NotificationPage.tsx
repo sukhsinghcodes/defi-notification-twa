@@ -75,7 +75,7 @@ export function NotificationPage() {
   const { mutateAsync, isPending } = useAddOrUpdateSubscription();
 
   const onSubmit = useCallback(
-    (values: { title: string; [key: string]: string }) => {
+    (values: { title: string } & (never[] | { [name: string]: string })) => {
       async function submit() {
         if (
           !notification ||
@@ -97,7 +97,7 @@ export function NotificationPage() {
           address: selectedAddress,
           userId,
           subscriptionValues: {
-            ...values,
+            ...(values as { [key: string]: string }),
           },
         };
         try {
@@ -259,9 +259,7 @@ export function NotificationPage() {
         })}
         <MainButton
           text="Save"
-          onClick={() =>
-            form.handleSubmit((values) => onSubmit(values as never))
-          }
+          onClick={() => form.handleSubmit((values) => onSubmit(values))}
           progress={isPending}
           disabled={isPending}
         />
