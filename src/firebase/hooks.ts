@@ -1,5 +1,5 @@
 import { getAuth, signInAnonymously } from 'firebase/auth';
-import { ref, get, child, set, update, push } from 'firebase/database';
+import { ref, get, child, set, push } from 'firebase/database';
 import { database } from './firebase-config';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { httpsCallable, getFunctions } from 'firebase/functions';
@@ -157,7 +157,7 @@ export function useAddOrUpdateSubscription() {
           throw new Error('No user data available');
         }
 
-        await update(userRef, { telegramId });
+        await set(child(userRef, 'telegramId'), telegramId);
 
         const subscriptionRef = ref(database, 'subscriptions');
 
