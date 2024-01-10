@@ -36,6 +36,7 @@ export function CustomFormControl({
             <FormLabel>{control.label}</FormLabel>
             <Input
               {...register(control.id)}
+              name={control.id}
               type="text"
               placeholder={control.label}
               defaultValue={control.defaultValue || ''}
@@ -78,6 +79,7 @@ export function CustomFormControl({
       Comp = (
         <VisuallyHiddenInput
           {...register(control.id)}
+          name={control.id}
           defaultValue={control.defaultValue || ''}
         />
       );

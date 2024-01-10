@@ -23,6 +23,7 @@ export function CustomNumberInput({
       step: 1,
       defaultValue: control.defaultValue || 0,
       min: 0,
+      name: control.id,
     });
 
   const inc = getIncrementButtonProps();
