@@ -76,6 +76,8 @@ export function NotificationPage() {
 
   const handleSubmit = useCallback(
     (values: { title: string } & (never[] | { [name: string]: string })) => {
+      console.log('handleSubmit', values);
+
       async function submit() {
         if (
           !notification ||
@@ -259,7 +261,12 @@ export function NotificationPage() {
         })}
         <MainButton
           text="Save"
-          onClick={() => form.handleSubmit(handleSubmit)}
+          onClick={() =>
+            form.handleSubmit((values) => {
+              console.log('onSubmit', values);
+              handleSubmit(values);
+            })
+          }
           progress={isPending}
           disabled={isPending}
         />
