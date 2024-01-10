@@ -49,7 +49,7 @@ export function NotificationPage() {
     address: selectedAddress || '',
   });
 
-  const fields = useMemo(() => {
+  const fields: { [name: string]: string } = useMemo(() => {
     if (!subscribeForm) {
       return [];
     }
@@ -59,7 +59,7 @@ export function NotificationPage() {
         ...prev,
         [control.id]: control.value || control.default || '',
       }),
-      {} as { [name: (typeof subscribeForm.controls)[number]['id']]: string }
+      {}
     );
   }, [subscribeForm]);
 
@@ -75,7 +75,7 @@ export function NotificationPage() {
   const { mutateAsync, isPending } = useAddOrUpdateSubscription();
 
   const handleSubmit = useCallback(
-    (values: { title: string } & (never[] | { [name: string]: string })) => {
+    (values: { title: string } & { [name: string]: string }) => {
       console.log('handleSubmit', values);
 
       async function submit() {
