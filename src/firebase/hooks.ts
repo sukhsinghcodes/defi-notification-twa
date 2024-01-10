@@ -161,6 +161,8 @@ export function useAddOrUpdateSubscription() {
 
         const subscriptionRef = ref(database, 'subscriptions');
 
+        console.log('subscription', subscription);
+
         if (subscription.uid) {
           await set(child(subscriptionRef, subscription.uid), subscription);
           return true;

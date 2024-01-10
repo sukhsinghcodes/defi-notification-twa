@@ -85,6 +85,8 @@ export function NotificationPage() {
           return;
         }
 
+        console.log('submit', values);
+
         const { title, ...rest } = values;
 
         const subscription: Subscription = {
