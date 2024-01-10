@@ -21,7 +21,7 @@ import {
   useSubscribeForm,
 } from '../../../firebase';
 import { useUser } from '../../../user';
-import { Controller, useForm } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import { formatAddress } from '../../../utils';
 import { CustomNumberInput } from './CustomNumberInput';
 
@@ -195,11 +195,14 @@ export function NotificationPage() {
                   <FormControl>
                     <FormLabel>{control.label}</FormLabel>
                     <Input
-                      {...form.register(control.id)}
                       name={control.id}
                       type="text"
                       placeholder={control.label}
                       defaultValue={control.defaultValue || ''}
+                      value={form.getValues(control.id)}
+                      onChange={(e) =>
+                        form.setValue(control.id, e.target.value)
+                      }
                     />
                   </FormControl>
                 </Card>
@@ -210,18 +213,18 @@ export function NotificationPage() {
                 <Card>
                   <FormControl>
                     <FormLabel>{control.label}</FormLabel>
-                    <Controller
+                    <Select
                       name={control.id}
-                      control={form.control}
                       defaultValue={control.defaultValue || ''}
-                      render={({ field }) => (
-                        <Select {...field}>
-                          {control.selectOptions?.map((option) => (
-                            <option value={option.value}>{option.label}</option>
-                          ))}
-                        </Select>
-                      )}
-                    />
+                      value={form.getValues(control.id)}
+                      onChange={(e) =>
+                        form.setValue(control.id, e.target.value)
+                      }
+                    >
+                      {control.selectOptions?.map((option) => (
+                        <option value={option.value}>{option.label}</option>
+                      ))}
+                    </Select>
                   </FormControl>
                 </Card>
               );
@@ -232,8 +235,10 @@ export function NotificationPage() {
                   <FormControl>
                     <FormLabel>{control.label}</FormLabel>
                     <CustomNumberInput
-                      control={control}
-                      register={form.register}
+                      name={control.id}
+                      defaultValue={control.defaultValue || ''}
+                      value={form.getValues(control.id)}
+                      onChange={(value) => form.setValue(control.id, value)}
                     />
                   </FormControl>
                 </Card>
@@ -242,9 +247,9 @@ export function NotificationPage() {
             case 'hidden':
               Comp = (
                 <VisuallyHiddenInput
-                  {...form.register(control.id)}
                   name={control.id}
                   defaultValue={control.defaultValue || ''}
+                  value={form.getValues(control.id)}
                 />
               );
               break;
