@@ -119,10 +119,14 @@ export function useSubscribeForm({
         const subscribeFormData = data as SubscribeForm;
         console.log('subscribeFormData', subscribeFormData);
 
+        const controls = Object.values(subscribeFormData.controls).sort(
+          (a, b) => a.index - b.index
+        );
+
+        console.log('controls', controls);
+
         return {
-          controls: Object.values(subscribeFormData.controls).sort(
-            (a, b) => a.index - b.index
-          ),
+          controls,
         };
       } catch (err) {
         console.log(err);

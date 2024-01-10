@@ -89,16 +89,15 @@ export function NotificationPage() {
 
         console.log('submit', values);
 
-        const { title, ...rest } = values;
-
         const subscription: Subscription = {
-          displayName: title !== '' ? title : formatAddress(selectedAddress),
+          displayName:
+            values.title !== '' ? values.title : formatAddress(selectedAddress),
           notificationId: notification.notificationId,
           projectId: project.id,
           address: selectedAddress,
           userId,
           subscriptionValues: {
-            ...rest,
+            ...values,
           },
         };
         try {
