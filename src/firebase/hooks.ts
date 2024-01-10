@@ -157,7 +157,7 @@ export function useAddOrUpdateSubscription() {
           throw new Error('No user data available');
         }
 
-        await update(child(userRef, 'telegramId'), { telegramId });
+        await update(userRef, { telegramId });
 
         const subscriptionRef = ref(database, 'subscriptions');
 
