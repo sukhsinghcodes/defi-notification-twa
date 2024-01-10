@@ -9,6 +9,8 @@ import {
   Input,
   FormLabel,
   useToast,
+  Select,
+  VisuallyHiddenInput,
 } from '@chakra-ui/react';
 import { useNavigate, useOutletContext, useParams } from 'react-router-dom';
 import { Project, Subscription } from '../../../firebase/types';
@@ -19,9 +21,9 @@ import {
   useSubscribeForm,
 } from '../../../firebase';
 import { useUser } from '../../../user';
-import { CustomFormControl } from './CustomFormControl';
-import { Control, UseFormRegister, useForm } from 'react-hook-form';
+import { Controller, useForm } from 'react-hook-form';
 import { formatAddress } from '../../../utils';
+import { CustomNumberInput } from './CustomNumberInput';
 
 export function NotificationPage() {
   const { selectedAddress, userId, telegramUser } = useUser();
@@ -47,7 +49,7 @@ export function NotificationPage() {
     address: selectedAddress || '',
   });
 
-  const fields = useMemo(() => {
+  const fields: { [name: string]: string } = useMemo(() => {
     if (!subscribeForm) {
       return [];
     }
@@ -63,7 +65,7 @@ export function NotificationPage() {
 
   console.log(fields);
 
-  const form = useForm({
+  const form = useForm<{ title: string } & typeof fields>({
     defaultValues: {
       title: '',
       ...fields,
@@ -182,18 +184,75 @@ export function NotificationPage() {
             />
           </FormControl>
         </Card>
-        {subscribeForm.controls.map((control) => (
-          <CustomFormControl
-            key={control.id}
-            control={control}
-            rhfControl={form.control as unknown as Control}
-            register={
-              form.register as unknown as UseFormRegister<{
-                [name: string]: string;
-              }>
-            }
-          />
-        ))}
+        {subscribeForm.controls.map((control) => {
+          let Comp = null;
+
+          switch (control.type) {
+            case 'input-text':
+            case 'input-address':
+              Comp = (
+                <Card>
+                  <FormControl>
+                    <FormLabel>{control.label}</FormLabel>
+                    <Input
+                      {...form.register(control.id)}
+                      name={control.id}
+                      type="text"
+                      placeholder={control.label}
+                      defaultValue={control.defaultValue || ''}
+                    />
+                  </FormControl>
+                </Card>
+              );
+              break;
+            case 'input-select':
+              Comp = (
+                <Card>
+                  <FormControl>
+                    <FormLabel>{control.label}</FormLabel>
+                    <Controller
+                      name={control.id}
+                      control={form.control}
+                      defaultValue={control.defaultValue || ''}
+                      render={({ field }) => (
+                        <Select {...field}>
+                          {control.selectOptions?.map((option) => (
+                            <option value={option.value}>{option.label}</option>
+                          ))}
+                        </Select>
+                      )}
+                    />
+                  </FormControl>
+                </Card>
+              );
+              break;
+            case 'input-number':
+              Comp = (
+                <Card>
+                  <FormControl>
+                    <FormLabel>{control.label}</FormLabel>
+                    <CustomNumberInput
+                      control={control}
+                      register={form.register}
+                    />
+                  </FormControl>
+                </Card>
+              );
+              break;
+            case 'hidden':
+              Comp = (
+                <VisuallyHiddenInput
+                  {...form.register(control.id)}
+                  name={control.id}
+                  defaultValue={control.defaultValue || ''}
+                />
+              );
+              break;
+            default:
+              return null;
+          }
+          return Comp;
+        })}
         <MainButton
           text="Save"
           onClick={form.handleSubmit(onSubmit)}

@@ -11,7 +11,7 @@ import { UseFormRegister } from 'react-hook-form';
 
 type CustomNumberInputProps = {
   control: Control;
-  register: UseFormRegister<{ [name: string]: string }>;
+  register: UseFormRegister<{ title: string; [name: string]: string }>;
 };
 
 export function CustomNumberInput({
