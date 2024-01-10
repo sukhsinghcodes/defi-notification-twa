@@ -49,7 +49,7 @@ export function NotificationPage() {
     address: selectedAddress || '',
   });
 
-  const fields: { [name: string]: string } = useMemo(() => {
+  const fields = useMemo(() => {
     if (!subscribeForm) {
       return [];
     }
@@ -57,9 +57,9 @@ export function NotificationPage() {
     return subscribeForm.controls.reduce(
       (prev, control) => ({
         ...prev,
-        [control.id]: control.value || control.defaultValue || '',
+        [control.id]: control.value || control.default || '',
       }),
-      {}
+      {} as { [name: (typeof subscribeForm.controls)[number]['id']]: string }
     );
   }, [subscribeForm]);
 
@@ -87,7 +87,7 @@ export function NotificationPage() {
           return;
         }
 
-        console.log('submit', values);
+        console.log('submit values', values);
 
         const subscription: Subscription = {
           displayName:
@@ -197,7 +197,7 @@ export function NotificationPage() {
                       name={control.id}
                       type="text"
                       placeholder={control.label}
-                      defaultValue={control.defaultValue || ''}
+                      defaultValue={control.default || ''}
                       value={form.getValues(control.id)}
                       onChange={(e) =>
                         form.setValue(control.id, e.target.value)
@@ -214,7 +214,7 @@ export function NotificationPage() {
                     <FormLabel>{control.label}</FormLabel>
                     <Select
                       name={control.id}
-                      defaultValue={control.defaultValue || ''}
+                      defaultValue={control.default || ''}
                       value={form.getValues(control.id)}
                       onChange={(e) =>
                         form.setValue(control.id, e.target.value)
@@ -235,7 +235,7 @@ export function NotificationPage() {
                     <FormLabel>{control.label}</FormLabel>
                     <CustomNumberInput
                       name={control.id}
-                      defaultValue={control.defaultValue || ''}
+                      defaultValue={control.default || ''}
                       value={form.getValues(control.id)}
                       onChange={(value) => form.setValue(control.id, value)}
                     />
@@ -247,7 +247,7 @@ export function NotificationPage() {
               Comp = (
                 <VisuallyHiddenInput
                   name={control.id}
-                  defaultValue={control.defaultValue || ''}
+                  defaultValue={control.default || ''}
                   value={form.getValues(control.id)}
                 />
               );
@@ -259,7 +259,9 @@ export function NotificationPage() {
         })}
         <MainButton
           text="Save"
-          onClick={form.handleSubmit(onSubmit)}
+          onClick={() =>
+            form.handleSubmit((values) => onSubmit(values as never))
+          }
           progress={isPending}
           disabled={isPending}
         />

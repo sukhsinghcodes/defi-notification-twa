@@ -10,10 +10,10 @@ export type Control = {
   readonly label: string;
   readonly suffix?: string | null;
   readonly description?: string | null;
-  readonly defaultValue?: string | null;
+  readonly default?: string | null;
   readonly value?: string | null;
   readonly index: number;
-  readonly internal: boolean;
+  readonly _internal: boolean;
   readonly isOptional: boolean;
   readonly selectOptions: SelectOption[] | null;
 };
