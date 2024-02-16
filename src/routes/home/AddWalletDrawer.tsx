@@ -16,9 +16,9 @@ import {
 } from '@chakra-ui/react';
 import { MainButton } from '../../twa-ui-kit';
 import { Wallet } from './types';
-import { useForm } from 'react-hook-form';
 import { BiPaste } from 'react-icons/bi';
 import { useState, useEffect, useCallback } from 'react';
+import { useFormik } from 'formik';
 
 type AddWalletDrawerProps = {
   isOpen: boolean;
@@ -34,11 +34,12 @@ export function AddWalletDrawer({
   const [pasteSupported, setPasteSupported] = useState(false);
   const toast = useToast();
 
-  const form = useForm({
-    defaultValues: {
+  const form = useFormik({
+    initialValues: {
       address: '',
       name: '',
     },
+    onSubmit,
   });
 
   useEffect(() => {
@@ -68,7 +69,7 @@ export function AddWalletDrawer({
     async function paste() {
       try {
         const text = await navigator.clipboard.readText();
-        form.setValue('address', text);
+        form.setFieldValue('address', text);
       } catch (err) {
         toast({
           description: 'Failed to read clipboard contents',
@@ -85,7 +86,7 @@ export function AddWalletDrawer({
       placement="bottom"
       onClose={() => {
         onClose();
-        form.reset();
+        form.resetForm();
       }}
       isOpen={isOpen}
       autoFocus={false}
@@ -96,12 +97,12 @@ export function AddWalletDrawer({
         <DrawerBody>
           <form>
             <VStack spacing={4} mb={4} alignItems="stretch">
-              <FormControl isInvalid={Boolean(form.formState.errors.address)}>
+              <FormControl isInvalid={Boolean(form.errors.address)}>
                 <InputGroup>
                   <Input
                     type="text"
                     placeholder="Address"
-                    {...form.register('address', { required: true })}
+                    {...form.getFieldProps('address')}
                   />
                   {pasteSupported && (
                     <InputRightElement>
@@ -115,7 +116,7 @@ export function AddWalletDrawer({
                     </InputRightElement>
                   )}
                 </InputGroup>
-                {Boolean(form.formState.errors.address) && (
+                {Boolean(form.errors.address) && (
                   <FormErrorMessage>
                     Wallet address is required.
                   </FormErrorMessage>
@@ -125,10 +126,10 @@ export function AddWalletDrawer({
                 <Input
                   type="text"
                   placeholder="Name"
-                  {...form.register('name')}
+                  {...form.getFieldProps('name')}
                 />
               </FormControl>
-              <MainButton text="Add" onClick={form.handleSubmit(onSubmit)} />
+              <MainButton text="Add" onClick={form.handleSubmit} />
             </VStack>
           </form>
         </DrawerBody>
