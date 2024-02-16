@@ -21,9 +21,9 @@ import {
   useSubscribeForm,
 } from '../../../firebase';
 import { useUser } from '../../../user';
-import { useForm } from 'react-hook-form';
 import { formatAddress } from '../../../utils';
 import { CustomNumberInput } from './CustomNumberInput';
+import { Form, Formik, FormikHelpers } from 'formik';
 
 export function NotificationPage() {
   const { selectedAddress, userId, telegramUser } = useUser();
@@ -63,19 +63,17 @@ export function NotificationPage() {
     );
   }, [subscribeForm]);
 
-  console.log(fields);
-
-  const form = useForm<{ title: string } & typeof fields>({
-    defaultValues: {
-      title: '',
-      ...fields,
-    },
-  });
+  console.log('fields', fields);
 
   const { mutateAsync, isPending } = useAddOrUpdateSubscription();
 
   const handleSubmit = useCallback(
-    (values: { title: string } & { [name: string]: string }) => {
+    (
+      values: { title: string } & { [name: string]: string },
+      {
+        resetForm,
+      }: FormikHelpers<{ title: string } & { [name: string]: string }>
+    ) => {
       console.log('handleSubmit', values);
 
       async function submit() {
@@ -115,7 +113,7 @@ export function NotificationPage() {
             duration: 2000,
           });
 
-          form.reset();
+          resetForm();
           //redirect to project page
           navigate(`/project/${project.id}`);
         } catch (err) {
@@ -138,7 +136,6 @@ export function NotificationPage() {
       project.id,
       mutateAsync,
       toast,
-      form,
       navigate,
     ]
   );
@@ -152,125 +149,113 @@ export function NotificationPage() {
   }
 
   return (
-    <form>
-      <VStack spacing={4} mb={8} pt={8} alignItems="stretch">
-        <DataDisplayItem
-          StartTextSlot={
-            <Box>
-              <Heading as="h1" size="md">
-                {notification?.displayName}
-              </Heading>
-              <Text>{notification?.description}</Text>
-            </Box>
-          }
-          EndIconSlot={
-            <Image
-              src={`/networks/${
-                notification.network ? notification.network : project.network
-              }.png`}
-              minW={10}
-              width={10}
-              height={10}
-              fallbackSrc="/networks/generic.png"
-            />
-          }
-        />
-        <Card>
-          <FormControl>
-            <FormLabel>Title</FormLabel>
-            <Input
-              type="text"
-              placeholder="Title"
-              {...form.register('title')}
-            />
-          </FormControl>
-        </Card>
-        {subscribeForm.controls.map((control) => {
-          let Comp = null;
-
-          switch (control.type) {
-            case 'input-text':
-            case 'input-address':
-              Comp = (
-                <Card>
-                  <FormControl>
-                    <FormLabel>{control.label}</FormLabel>
-                    <Input
-                      name={control.id}
-                      type="text"
-                      placeholder={control.label}
-                      defaultValue={control.default || ''}
-                      value={form.getValues(control.id)}
-                      onChange={(e) =>
-                        form.setValue(control.id, e.target.value)
-                      }
-                    />
-                  </FormControl>
-                </Card>
-              );
-              break;
-            case 'input-select':
-              Comp = (
-                <Card>
-                  <FormControl>
-                    <FormLabel>{control.label}</FormLabel>
-                    <Select
-                      name={control.id}
-                      defaultValue={control.default || ''}
-                      value={form.getValues(control.id)}
-                      onChange={(e) =>
-                        form.setValue(control.id, e.target.value)
-                      }
-                    >
-                      {control.selectOptions?.map((option) => (
-                        <option value={option.value}>{option.label}</option>
-                      ))}
-                    </Select>
-                  </FormControl>
-                </Card>
-              );
-              break;
-            case 'input-number':
-              Comp = (
-                <Card>
-                  <FormControl>
-                    <FormLabel>{control.label}</FormLabel>
-                    <CustomNumberInput
-                      name={control.id}
-                      defaultValue={control.default || ''}
-                      value={form.getValues(control.id)}
-                      onChange={(value) => form.setValue(control.id, value)}
-                    />
-                  </FormControl>
-                </Card>
-              );
-              break;
-            case 'hidden':
-              Comp = (
-                <VisuallyHiddenInput
-                  name={control.id}
-                  defaultValue={control.default || ''}
-                  value={form.getValues(control.id)}
+    <Formik
+      initialValues={{
+        title: '',
+        ...fields,
+      }}
+      onSubmit={handleSubmit}
+    >
+      {(form) => (
+        <Form>
+          <VStack spacing={4} mb={8} pt={8} alignItems="stretch">
+            <DataDisplayItem
+              StartTextSlot={
+                <Box>
+                  <Heading as="h1" size="md">
+                    {notification?.displayName}
+                  </Heading>
+                  <Text>{notification?.description}</Text>
+                </Box>
+              }
+              EndIconSlot={
+                <Image
+                  src={`/networks/${
+                    notification.network
+                      ? notification.network
+                      : project.network
+                  }.png`}
+                  minW={10}
+                  width={10}
+                  height={10}
+                  fallbackSrc="/networks/generic.png"
                 />
-              );
-              break;
-            default:
-              return null;
-          }
-          return Comp;
-        })}
-        <MainButton
-          text="Save"
-          onClick={() =>
-            form.handleSubmit((values) => {
-              console.log('onSubmit', values);
-              handleSubmit(values);
-            })
-          }
-          progress={isPending}
-          disabled={isPending}
-        />
-      </VStack>
-    </form>
+              }
+            />
+            <Card>
+              <FormControl>
+                <FormLabel>Title</FormLabel>
+                <Input
+                  type="text"
+                  placeholder="Title"
+                  {...form.getFieldProps('title')}
+                />
+              </FormControl>
+            </Card>
+            {subscribeForm.controls.map((control) => {
+              let Comp = null;
+
+              switch (control.type) {
+                case 'input-text':
+                case 'input-address':
+                  Comp = (
+                    <Card>
+                      <FormControl>
+                        <FormLabel>{control.label}</FormLabel>
+                        <Input
+                          type="text"
+                          placeholder={control.label}
+                          {...form.getFieldProps(control.id)}
+                        />
+                      </FormControl>
+                    </Card>
+                  );
+                  break;
+                case 'input-select':
+                  Comp = (
+                    <Card>
+                      <FormControl>
+                        <FormLabel>{control.label}</FormLabel>
+                        <Select {...form.getFieldProps(control.id)}>
+                          {control.selectOptions?.map((option) => (
+                            <option value={option.value}>{option.label}</option>
+                          ))}
+                        </Select>
+                      </FormControl>
+                    </Card>
+                  );
+                  break;
+                case 'input-number':
+                  Comp = (
+                    <Card>
+                      <FormControl>
+                        <FormLabel>{control.label}</FormLabel>
+                        <CustomNumberInput
+                          {...form.getFieldProps(control.id)}
+                        />
+                      </FormControl>
+                    </Card>
+                  );
+                  break;
+                case 'hidden':
+                  Comp = (
+                    <VisuallyHiddenInput {...form.getFieldProps(control.id)} />
+                  );
+                  break;
+                default:
+                  return null;
+              }
+              return Comp;
+            })}
+            <MainButton
+              text="Save"
+              onClick={() => form.handleSubmit}
+              progress={isPending}
+              disabled={isPending}
+            />
+          </VStack>
+        </Form>
+      )}
+    </Formik>
   );
 }
