@@ -51,7 +51,7 @@ export function NotificationPage() {
 
   const fields: { [name: string]: string } = useMemo(() => {
     if (!subscribeForm) {
-      return [];
+      return {};
     }
 
     return subscribeForm.controls.reduce(
@@ -249,7 +249,7 @@ export function NotificationPage() {
             })}
             <MainButton
               text="Save"
-              onClick={() => form.handleSubmit}
+              onClick={form.submitForm}
               progress={isPending}
               disabled={isPending}
             />
