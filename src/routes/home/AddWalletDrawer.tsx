@@ -129,7 +129,7 @@ export function AddWalletDrawer({
                   {...form.getFieldProps('name')}
                 />
               </FormControl>
-              <MainButton text="Add" onClick={form.handleSubmit} />
+              <MainButton text="Add" onClick={form.submitForm} />
             </VStack>
           </form>
         </DrawerBody>
