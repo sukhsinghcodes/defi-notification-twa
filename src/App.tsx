@@ -10,12 +10,18 @@ import { WagmiConfig } from 'wagmi';
 import { config } from './web3';
 import { ThemeProvider } from './ThemeProvider';
 import { NotificationPage } from './routes/project/notification';
+import { OnboardingPage } from './routes/onboarding';
 
 const queryClient = new QueryClient();
 
 const router = createBrowserRouter([
   {
     path: '/',
+    element: <OnboardingPage />,
+    errorElement: <ErrorPage />,
+  },
+  {
+    path: '/home',
     element: <HomePage />,
     errorElement: <ErrorPage />,
   },

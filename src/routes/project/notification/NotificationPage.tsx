@@ -231,6 +231,9 @@ export function NotificationPage() {
                       <FormControl>
                         <FormLabel>{control.label}</FormLabel>
                         <CustomNumberInput
+                          step={1}
+                          defaultValue={0}
+                          min={0}
                           {...form.getFieldProps(control.id)}
                         />
                       </FormControl>
