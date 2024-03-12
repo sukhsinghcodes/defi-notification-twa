@@ -108,6 +108,7 @@ export const baseTheme = {
     heading: `'ui-rounded',  sans-serif`,
     body: `'ui-rounded', sans-serif`,
   },
+
   styles: {
     global: (props: StyleFunctionProps) => ({
       body: {
@@ -146,8 +147,13 @@ export const baseTheme = {
           fontSize: '0.875rem',
         }),
         bodyText: {
-          fontSize: '1.0625rem',
+          fontSize: '1rem',
         },
+      },
+    }),
+    Avatar: defineStyleConfig({
+      defaultProps: {
+        size: 'sm',
       },
     }),
     Button: defineStyleConfig({

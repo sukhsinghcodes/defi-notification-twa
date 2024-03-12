@@ -1,9 +1,18 @@
-import { Container, Heading, Image, Spinner, VStack } from '@chakra-ui/react';
+import {
+  Container,
+  Heading,
+  Icon,
+  Image,
+  Spinner,
+  Text,
+  VStack,
+} from '@chakra-ui/react';
 import { StorageKeys, useUser } from '../../user';
 import { useEffect } from 'react';
 import Twa from '@twa-dev/sdk';
-import { MainButton } from '../../twa-ui-kit';
+import { DataDisplayItem, MainButton } from '../../twa-ui-kit';
 import { useNavigate } from 'react-router-dom';
+import { IoNotificationsOutline, IoWalletOutline } from 'react-icons/io5';
 
 export function OnboardingPage() {
   const user = useUser();
@@ -54,9 +63,29 @@ export function OnboardingPage() {
         <Heading as="h1" size="md" textAlign="center">
           Welcome to the DeFi Notifications Telegram bot!
         </Heading>
+        <VStack gap={4}>
+          <DataDisplayItem
+            StartIconSlot={<Icon as={IoNotificationsOutline} fontSize={40} />}
+            StartTextSlot={
+              <Text>
+                Get <strong>free mobile alerts</strong> for crucial on-chain
+                events
+              </Text>
+            }
+          />
+          <DataDisplayItem
+            StartIconSlot={<Icon as={IoWalletOutline} fontSize={40} />}
+            StartTextSlot={
+              <Text>
+                Supports many of the <strong>major DeFi protocols</strong>{' '}
+                across multiple chains
+              </Text>
+            }
+          />
+        </VStack>
         <MainButton
           onClick={() => {
-            navigate('/home');
+            navigate('/add-wallet');
           }}
           text="Connect your wallet"
         />

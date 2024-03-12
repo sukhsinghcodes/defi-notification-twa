@@ -1,31 +1,52 @@
 import {
-  Menu,
-  MenuButton,
-  Button,
-  MenuList,
-  MenuItem,
   Icon,
   Box,
   Heading,
-  MenuDivider,
   useToast,
   Text,
+  HStack,
+  Avatar,
+  Divider,
+  useDisclosure,
+  useOutsideClick,
+  SlideFade,
 } from '@chakra-ui/react';
-import { useCallback, useEffect, useState } from 'react';
-import { BiChevronDown, BiPlusCircle } from 'react-icons/bi';
+import { useCallback, useEffect, useRef, useState } from 'react';
+import { BiChevronDown, BiChevronUp, BiPlusCircle } from 'react-icons/bi';
 import { MdCircle } from 'react-icons/md';
-import { StorageKeys, useUser } from '../../user';
+import { StorageKeys, useUser } from '../user';
 import Twa from '@twa-dev/sdk';
-import { DataDisplayItem, MainButton } from '../../twa-ui-kit';
+import {
+  Card,
+  DataDisplayItem,
+  List,
+  ListItem,
+  MainButton,
+} from '../twa-ui-kit';
 import { AddWalletDrawer } from './AddWalletDrawer';
-import { Wallet } from './types';
-import { formatAddress } from '../../utils';
+import { Wallet } from '../routes/home/types';
+import { formatAddress } from '../utils';
+import { IoWalletOutline } from 'react-icons/io5';
+import { css } from '@emotion/react';
+
+const dropdownStyles = css`
+  position: absolute;
+  z-index: 100;
+  box-shadow: 0 5px 10px 0 rgba(0, 0, 0, 0.1);
+  margin-top: 0.5rem;
+`;
 
 export function WalletMenu() {
   const { selectedAddress, setSelectedAddress } = useUser();
   const [wallets, setWallets] = useState<Record<string, string>>({});
   const [isAddWalletOpen, setIsAddWalletOpen] = useState(false);
   const toast = useToast();
+  const { onToggle, onClose, isOpen } = useDisclosure();
+  const ref = useRef(null);
+  useOutsideClick({
+    ref,
+    handler: onClose,
+  });
 
   useEffect(() => {
     try {
@@ -113,7 +134,7 @@ export function WalletMenu() {
             setIsAddWalletOpen(false);
             toast({
               title: `${wallet.name} added.`,
-              description: wallet.address,
+              description: formatAddress(wallet.address),
               status: 'success',
               duration: 2000,
             });
@@ -138,52 +159,73 @@ export function WalletMenu() {
   return (
     <Box>
       {selectedAddress && wallets ? (
-        <Menu>
-          <MenuButton as={Button} variant="card" py={8}>
+        <div ref={ref} style={{ position: 'relative' }}>
+          <Card onClick={onToggle}>
             <DataDisplayItem
-              StartIconSlot={<Icon as={MdCircle} color={'green'} />}
+              StartIconSlot={
+                <Avatar
+                  backgroundColor="orange"
+                  icon={<Icon as={IoWalletOutline} color={'white'} />}
+                />
+              }
               StartTextSlot={
-                <Box textAlign="left">
+                <HStack alignItems="baseline">
                   <Heading as="h3" variant="bodyTitle">
                     {wallets[selectedAddress]}
                   </Heading>
                   <Text variant="hint">{formatAddress(selectedAddress)}</Text>
-                </Box>
+                </HStack>
               }
-              EndIconSlot={<Icon as={BiChevronDown} />}
+              EndIconSlot={<Icon as={isOpen ? BiChevronUp : BiChevronDown} />}
             />
-          </MenuButton>
-          <MenuList>
-            {wallets &&
-              Object.entries(wallets).map(([address, name]) => (
-                <MenuItem key={address} onClick={() => handleSelect(address)}>
-                  <DataDisplayItem
-                    StartIconSlot={
-                      <Icon
-                        as={MdCircle}
-                        color={address === selectedAddress ? 'green' : 'gray'}
-                      />
-                    }
-                    StartTextSlot={
-                      <Box>
-                        <Heading as="h3" variant="bodyTitle">
-                          {name != '' ? name : formatAddress(address)}
-                        </Heading>
-                        <Text variant="hint">{formatAddress(address)}</Text>
-                      </Box>
-                    }
+          </Card>
+
+          {isOpen && (
+            <Box css={dropdownStyles}>
+              <SlideFade in={isOpen} offsetY={-10}>
+                <List mode="select">
+                  <ListItem
+                    onClick={() => {
+                      setIsAddWalletOpen(true);
+                      onClose();
+                    }}
+                    EndIconSlot={<Icon as={BiPlusCircle} />}
+                    StartTextSlot={<Text as="p">Add Wallet</Text>}
                   />
-                </MenuItem>
-              ))}
-            <MenuDivider />
-            <MenuItem
-              onClick={() => setIsAddWalletOpen(true)}
-              icon={<Icon as={BiPlusCircle} />}
-            >
-              Add Wallet
-            </MenuItem>
-          </MenuList>
-        </Menu>
+                  <Divider />
+                  {wallets &&
+                    Object.entries(wallets).map(([address, name]) => (
+                      <ListItem
+                        key={address}
+                        onClick={() => {
+                          handleSelect(address);
+                          onClose();
+                        }}
+                        StartIconSlot={
+                          <Icon
+                            as={MdCircle}
+                            color={
+                              address === selectedAddress ? 'green' : 'gray'
+                            }
+                          />
+                        }
+                        StartTextSlot={
+                          <Box>
+                            <Heading as="h3" variant="bodyTitle">
+                              {name != '' ? name : formatAddress(address)}
+                            </Heading>
+                            <Text variant="hint" wordBreak="break-all">
+                              {address}
+                            </Text>
+                          </Box>
+                        }
+                      />
+                    ))}
+                </List>
+              </SlideFade>
+            </Box>
+          )}
+        </div>
       ) : (
         <MainButton
           onClick={() => setIsAddWalletOpen(true)}

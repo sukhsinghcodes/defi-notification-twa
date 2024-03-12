@@ -56,7 +56,7 @@ const styles = {
     }
   `,
   title: css`
-    font-size: 14px;
+    font-size: 0.875rem;
     margin-left: 12px;
     margin-top: 10px;
   `,

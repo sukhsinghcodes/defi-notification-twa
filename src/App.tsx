@@ -11,6 +11,7 @@ import { config } from './web3';
 import { ThemeProvider } from './ThemeProvider';
 import { NotificationPage } from './routes/project/notification';
 import { OnboardingPage } from './routes/onboarding';
+import { AddWalletPage } from './routes/onboarding/AddWalletPage';
 
 const queryClient = new QueryClient();
 
@@ -18,6 +19,11 @@ const router = createBrowserRouter([
   {
     path: '/',
     element: <OnboardingPage />,
+    errorElement: <ErrorPage />,
+  },
+  {
+    path: '/add-wallet',
+    element: <AddWalletPage />,
     errorElement: <ErrorPage />,
   },
   {

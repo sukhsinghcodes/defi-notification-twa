@@ -5,8 +5,8 @@ import {
   DrawerHeader,
   DrawerBody,
 } from '@chakra-ui/react';
-import { Wallet } from './types';
-import { AddWalletForm } from '../../components/AddWalletForm';
+import { Wallet } from '../routes/home/types';
+import { AddWalletForm } from './AddWalletForm';
 
 type AddWalletDrawerProps = {
   isOpen: boolean;

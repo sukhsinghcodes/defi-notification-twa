@@ -14,7 +14,7 @@ import { Link } from 'react-router-dom';
 import { StorageKeys, useUser } from '../../user';
 import { useEffect } from 'react';
 import Twa from '@twa-dev/sdk';
-import { WalletMenu } from './WalletMenu';
+import { WalletMenu } from '../../components/WalletMenu';
 
 export function HomePage() {
   const user = useUser();

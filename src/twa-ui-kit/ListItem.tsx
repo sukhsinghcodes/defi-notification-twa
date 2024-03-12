@@ -5,6 +5,7 @@ import { BiCheck } from 'react-icons/bi';
 
 import { colors, tgColors } from './theme';
 import { Card } from './Card';
+import { hexToRgba } from '../utils';
 
 const styles = css`
   width: 100%;
@@ -12,6 +13,9 @@ const styles = css`
   min-height: unset;
   &:last-child:after {
     display: none;
+  }
+  &:active {
+    background-color: ${hexToRgba(colors.button_color, 0.05)};
   }
 `;
 
